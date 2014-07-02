@@ -15,15 +15,12 @@ int main(){
 	for(int i = 0; i < 4; i++){
 		for(int j = 0; j < 54; j++){
 			inputFile >> temp;
-			if(temp == '\n')
-				inputFile >> temp;
 			cube[j] = temp;
 		}
 		cout << "\nCube #: " << i+1 << ".\n";
 		for(int k = 0; k < 54; k++){
 			cout << cube[k] << " ";
 		}
-		cout << "\n\n";
 		Cube puzzle(cube, out);
 		puzzle.orient();	
 		puzzle.whiteCross();

@@ -89,7 +89,7 @@ void Cube::F(){
     cubeValues[44] = cubeValues[29];
     cubeValues[29] = cubeValues[45];
     cubeValues[45] = temp;
-    outputFile << "Perform F()\n";
+    outputFile << "F\n";
 }
 
 void Cube::Fi(){
@@ -119,7 +119,7 @@ void Cube::Fi(){
     cubeValues[15] = cubeValues[45];
     cubeValues[45] = cubeValues[29];
     cubeValues[29] = temp;
-    cout << "Perform Fi()\n";
+    outputFile << "Fi\n";
 }
 
 void Cube::R(){
@@ -149,7 +149,7 @@ void Cube::R(){
 	cubeValues[8] = cubeValues[53];
 	cubeValues[53] = cubeValues[18];
 	cubeValues[18] = temp;
-    cout << "Perform R()\n";
+    outputFile << "R\n";
 }
 
 void Cube::Ri(){
@@ -179,7 +179,7 @@ void Cube::Ri(){
 	cubeValues[44] = cubeValues[18];
 	cubeValues[18] = cubeValues[53];
 	cubeValues[53] = temp;
-    cout << "Perform Ri()\n";
+    outputFile << "Ri\n";
 }
 
 void Cube::L(){
@@ -209,7 +209,7 @@ void Cube::L(){
 	cubeValues[20] = cubeValues[51];
 	cubeValues[51] = cubeValues[6];
 	cubeValues[6] = temp;
-    cout << "Perform L()\n";
+    outputFile << "L\n";
 }
 
 void Cube::Li(){
@@ -239,7 +239,7 @@ void Cube::Li(){
 	cubeValues[42] = cubeValues[6];
 	cubeValues[6] = cubeValues[51];
 	cubeValues[51] = temp;
-    cout << "Perform Li()\n";
+    outputFile << "Li\n";
 }
 
 void Cube::B(){
@@ -269,7 +269,7 @@ void Cube::B(){
 	cubeValues[38] = cubeValues[17];
 	cubeValues[17] = cubeValues[51];
 	cubeValues[51] = temp;
-    cout << "Perform B()\n";
+	outputFile << "B\n";
 }
 
 void Cube::Bi(){
@@ -299,7 +299,7 @@ void Cube::Bi(){
 	cubeValues[27] = cubeValues[51];
 	cubeValues[51] = cubeValues[17];
 	cubeValues[17] = temp;
-    cout << "Perform Bi()\n";
+    outputFile << "Bi\n";
 }
 
 void Cube::U(){
@@ -329,7 +329,7 @@ void Cube::U(){
 	cubeValues[11] = cubeValues[20];
 	cubeValues[20] = cubeValues[29];
 	cubeValues[29] = temp;
-    cout << "Perform U()\n";
+    outputFile << "U\n";
 }
 
 void Cube::Ui(){
@@ -359,7 +359,7 @@ void Cube::Ui(){
 	cubeValues[2] = cubeValues[29];
 	cubeValues[29] = cubeValues[20];
 	cubeValues[20] = temp;
-    cout << "Perform Ui()\n";
+    outputFile << "Ui\n";
 }
 
 void Cube::D(){
@@ -389,7 +389,7 @@ void Cube::D(){
 	cubeValues[33] = cubeValues[24];
 	cubeValues[24] = cubeValues[15];
 	cubeValues[15] = temp;
-    cout << "Perform D()\n";
+    outputFile << "D\n";
 }
 
 void Cube::Di(){
@@ -419,11 +419,10 @@ void Cube::Di(){
 	cubeValues[6] = cubeValues[15];
 	cubeValues[15] = cubeValues[24];
 	cubeValues[24] = temp;
-    cout << "Perform Di()\n";
+    outputFile << "Di\n";
 }
 
 void Cube::TurnCube(){
-	//cout << "Turning the Cube!!!\n";
 	char temp = 'x';
 	temp = cubeValues[51];
 	cubeValues[51] = cubeValues[45];
@@ -490,6 +489,7 @@ void Cube::TurnCube(){
 	cubeValues[5] = cubeValues[14];
 	cubeValues[14] = cubeValues[23];
 	cubeValues[23] = temp;
+	outputFile << "TurnCube\n";
 }
 
 void Cube::RollCube(){
@@ -559,11 +559,10 @@ void Cube::RollCube(){
 	cubeValues[41] = cubeValues[28];
 	cubeValues[28] = cubeValues[48];
     cubeValues[48] = temp;
-    //cout << "Rolling the Cube.\n";
+	outputFile << "RollCube\n";
 }
-
+	
 void Cube::UpsideDownCube(){
-	//cout << "\nUpside Down Cube!!!\n";
 	for(int i = 0; i < 2; i++){
 		RollCube();
     }
@@ -696,9 +695,7 @@ void Cube::orient(){
 			this->TurnCube();
 		}
 	}					
-	
-	//cout << "Please make sure that the top side is white and the " << 
-	//	"front side is blue.\n";
+	outputFile << "Orient\n";
 }
 
 void Cube::whiteCross(){
@@ -1227,8 +1224,7 @@ void Cube::whiteCorners(){
 			}
 		}
 		else{
-			cout << "Corner Index is  = " << cornerIndex << ".\n";
-					switch(cornerIndex){
+			switch(cornerIndex){
 				case 0:
 					this->Fi();
 					this->D();
@@ -1398,8 +1394,6 @@ void Cube::middle_fallRight(){
 void Cube::middleLayer(){
 	this->RollCube();
 	this->RollCube();
-	cout << "\n\nNow, the white side should be facing down ";
-	cout << "and the yellow side should be facing up.\n\n";
 	bool complete = false;
 	while(!complete){
 		if((this->at(3) == this->getFColor()) & (this->at(5) == this->getFColor()) & 
@@ -1513,22 +1507,15 @@ void Cube::middleLayer(){
 			}
 		}
 	}
-	cout << "Middle Layer is done.\n";
 }
 
 void Cube::yellowCross(){
 	bool completed = false;
-	cout << "\n\n Beginning Yellow Cross \n\n";
 	while(!completed){
-		cout << "This(37) is " << this->at(37) << ".\n";
-		cout << "This(39) is " << this->at(39) << ".\n";
-		cout << "This(41) is " << this->at(41) << ".\n";
-		cout << "This(43) is " << this->at(43) << ".\n";
-		
 		if((this->at(37) == 'y') & (this->at(39) == 'y') & 
 		(this->at(41) == 'y') & (this->at(43) == 'y')){
-						cout << "\n\n*********All done with Yellow Cross();*************\n\n";
-						return;
+			completed = true;
+			return;
 		}
 		else{
 			bool onlyCenter = true;
@@ -1608,8 +1595,6 @@ void Cube::yellowCorners(){
 			this->yellowCrossSequence();
 		}
 		else{
-			cout << "numCorners == " << numCorners << ".\n";
-			cout << "All done. with Yellow Corners!!!\n\n\n";
 			return;
 		}
 	}
@@ -1740,6 +1725,11 @@ void Cube::lastLayer_topSequenceCounter(){
 void Cube::lastLayer_topEdges(){
 	int i = 0;
 	bool completed = false;
+	if(this->at(1) == this->at(4))
+		if(this->at(10) == this->at(13))
+			if(this->at(19) == this->at(21))
+				if(this->at(28) == this->at(29))
+					return;
 	while(!completed){
 		i = 0;
 		while((this->at(19) != this->getBColor()) & (i < 4)){
@@ -1754,11 +1744,10 @@ void Cube::lastLayer_topEdges(){
 				this->lastLayer_topSequenceClock();	
 				completed = true;
 			}
-			else{
+			else if(this->at(1) == this->getRColor()){
 				this->lastLayer_topSequenceCounter();
 				completed = true;
 			}
 		}	
 	}
-	cout << "\n\nCongrats. You should be done.\n\n";
 }
