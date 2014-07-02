@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
 class Cube{
 	public:
-		Cube(char array[54]);
+		Cube(char array[54], string);
 		void print();
 		char at(int);
 		int edgeOf(int);
@@ -33,6 +34,7 @@ class Cube{
 		void lastLayer_topSequenceCounter();
 		void lastLayer_topEdges();
 	private:
+		ofstream outputFile;
 		char cubeValues[54];
 		void R();
 		void Ri();

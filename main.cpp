@@ -9,35 +9,34 @@ int main(){
 	int index = 0;
 
 	ifstream inputFile;
-	inputFile.open("cubeStart.txt");		
-	inputFile >> temp;
-	
-	while(inputFile){
-		cube[index] = temp;
-		index++;
-		inputFile >> temp;
+	ofstream outFile;
+	string out = "output.txt";
+	inputFile.open("cubeStart.txt");
+	for(int i = 0; i < 4; i++){
+		for(int j = 0; j < 54; j++){
+			inputFile >> temp;
+			if(temp == '\n')
+				inputFile >> temp;
+			cube[j] = temp;
+		}
+		cout << "\nCube #: " << i+1 << ".\n";
+		for(int k = 0; k < 54; k++){
+			cout << cube[k] << " ";
+		}
+		cout << "\n\n";
+		Cube puzzle(cube, out);
+		puzzle.orient();	
+		puzzle.whiteCross();
+		puzzle.whiteCorners();
+		puzzle.orient();
+		puzzle.middleLayer();
+		puzzle.yellowCross();
+		puzzle.yellowCorners();
+		puzzle.lastLayer_corners();
+		puzzle.lastLayer_topEdges();
+		cout << "Printing out cube number " << i+1 << ".\n";
+		puzzle.print();
 	}
-	
-	Cube puzzle(cube);
-	puzzle.orient();	
-	puzzle.whiteCross();
-	
-	cout << "At this point, you should have the \"white cross\" and the "
-		<< "correct colors going from the cross to the middle of each side.\n";
-		
-	puzzle.whiteCorners();
-	puzzle.print();
-	puzzle.orient();
-	puzzle.print();
-	puzzle.middleLayer();
-	puzzle.print();
-	puzzle.yellowCross();
-	puzzle.print();
-	//puzzle.yellowCorners();
-	//puzzle.print();
-	//puzzle.lastLayer_corners();
-	//puzzle.print();
-	//puzzle.lastLayer_topEdges();
-	//puzzle.print();
+	inputFile.close();
 	return 0;
 }

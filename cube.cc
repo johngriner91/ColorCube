@@ -1,9 +1,11 @@
 #include <iostream>
 using namespace std;
 
-Cube::Cube(char array[54]){
+Cube::Cube(char array[54], string a){
 	for(int i = 0; i < 54; i++)
 		cubeValues[i] = array[i];
+		
+	outputFile.open(a);
 }
 
 void Cube::printE(string a){
@@ -87,7 +89,7 @@ void Cube::F(){
     cubeValues[44] = cubeValues[29];
     cubeValues[29] = cubeValues[45];
     cubeValues[45] = temp;
-    cout << "Perform F()\n";
+    outputFile << "Perform F()\n";
 }
 
 void Cube::Fi(){
@@ -421,7 +423,7 @@ void Cube::Di(){
 }
 
 void Cube::TurnCube(){
-	cout << "Turning the Cube!!!\n";
+	//cout << "Turning the Cube!!!\n";
 	char temp = 'x';
 	temp = cubeValues[51];
 	cubeValues[51] = cubeValues[45];
@@ -557,11 +559,11 @@ void Cube::RollCube(){
 	cubeValues[41] = cubeValues[28];
 	cubeValues[28] = cubeValues[48];
     cubeValues[48] = temp;
-    cout << "Rolling the Cube.\n";
+    //cout << "Rolling the Cube.\n";
 }
 
 void Cube::UpsideDownCube(){
-	cout << "\nUpside Down Cube!!!\n";
+	//cout << "\nUpside Down Cube!!!\n";
 	for(int i = 0; i < 2; i++){
 		RollCube();
     }
@@ -695,8 +697,8 @@ void Cube::orient(){
 		}
 	}					
 	
-	cout << "Please make sure that the top side is white and the " << 
-		"front side is blue.\n";
+	//cout << "Please make sure that the top side is white and the " << 
+	//	"front side is blue.\n";
 }
 
 void Cube::whiteCross(){
@@ -1171,7 +1173,7 @@ void Cube::whiteCorners(){
 
 	int cornerIndex = 0; 
 	while(cornerIndex < 24){
-		cout << "CornerIndex is " << cornerIndex << ".\n";
+		//cout << "CornerIndex is " << cornerIndex << ".\n";
 		if(this->at(corner[cornerIndex]) != 'w')
 			cornerIndex++;
 		else if((16 <= cornerIndex) & (cornerIndex <= 19)){
@@ -1256,10 +1258,10 @@ void Cube::whiteCorners(){
 					this->correctSix(cornerIndex);
 					break;
 				case 5:
-					this->L();
+					this->R();
 					this->Di();
 					this->Di();
-					this->Li();
+					this->Ri();
 					this->D();
 					this->correctEight(cornerIndex);
 					break;
@@ -1516,7 +1518,13 @@ void Cube::middleLayer(){
 
 void Cube::yellowCross(){
 	bool completed = false;
+	cout << "\n\n Beginning Yellow Cross \n\n";
 	while(!completed){
+		cout << "This(37) is " << this->at(37) << ".\n";
+		cout << "This(39) is " << this->at(39) << ".\n";
+		cout << "This(41) is " << this->at(41) << ".\n";
+		cout << "This(43) is " << this->at(43) << ".\n";
+		
 		if((this->at(37) == 'y') & (this->at(39) == 'y') & 
 		(this->at(41) == 'y') & (this->at(43) == 'y')){
 						cout << "\n\n*********All done with Yellow Cross();*************\n\n";
@@ -1608,6 +1616,11 @@ void Cube::yellowCorners(){
 }
 
 void Cube::lastLayer_cornerSequence(){
+	if(this->at(0) == this->at(4))
+		if(this->at(9) == this->at(13))
+			if(this->at(18) == this->at(21))
+				if(this->at(27) == this->at(30))
+					return;
 	this->Ri();
 	this->F();
 	this->Ri();
@@ -1635,9 +1648,9 @@ void Cube::lastLayer_corners(){
 		situation = 3;
 	else
 		situation = 4;
-		
+			
 	if(situation == 0){
-		if(this->at(0) != this->at(4)){
+		while(this->at(0) != this->at(4)){
 			this->Ui();
 			this->TurnCube();
 		}
@@ -1648,7 +1661,7 @@ void Cube::lastLayer_corners(){
 	}
 	else if(situation == 1){
 		this->TurnCube();
-		if(this->at(0) != this->at(4)){
+		while(this->at(0) != this->at(4)){
 			this->Ui();
 			this->TurnCube();
 		}
@@ -1660,7 +1673,7 @@ void Cube::lastLayer_corners(){
 	else if(situation == 2){
 		this->TurnCube();
 		this->TurnCube();
-		if(this->at(0) != this->at(4)){
+		while(this->at(0) != this->at(4)){
 			this->Ui();
 			this->TurnCube();
 		}
@@ -1673,7 +1686,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->TurnCube();
 		this->TurnCube();
-		if(this->at(0) != this->at(4)){
+		while(this->at(0) != this->at(4)){
 			this->Ui();
 			this->TurnCube();
 		}
@@ -1683,9 +1696,15 @@ void Cube::lastLayer_corners(){
 		return;		
 	}
 	else{
-		this->printE("This are the droids you're looking for");
+		while(this->at(0) != this->at(4)){
+			this->Ui();
+			this->TurnCube();
+		}
+		this->TurnCube();
+		this->TurnCube();
+		this->lastLayer_cornerSequence();
+		this->lastLayer_corners();
 	}	
-	cout << "\n\n*********** Last Layer Corners ******************\n\n";
 }
 
 void Cube::lastLayer_topSequenceClock(){
