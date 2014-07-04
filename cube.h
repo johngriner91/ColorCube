@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -33,8 +34,8 @@ class Cube{
 		void lastLayer_topSequenceClock();
 		void lastLayer_topSequenceCounter();
 		void lastLayer_topEdges();
+		void parseResult();
 	private:
-		ofstream outputFile;
 		char cubeValues[54];
 		void R();
 		void Ri();
@@ -51,4 +52,5 @@ class Cube{
 		void TurnCube();
 		void RollCube();
 		void UpsideDownCube();
+		vector<string> instruction;
 };

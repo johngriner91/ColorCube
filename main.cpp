@@ -12,7 +12,7 @@ int main(){
 	ofstream outFile;
 	string out = "output.txt";
 	inputFile.open("cubeStart.txt");
-	for(int i = 0; i < 4; i++){
+	for(int i = 0; i < 1; i++){
 		for(int j = 0; j < 54; j++){
 			inputFile >> temp;
 			cube[j] = temp;
@@ -33,6 +33,7 @@ int main(){
 		puzzle.lastLayer_topEdges();
 		cout << "Printing out cube number " << i+1 << ".\n";
 		puzzle.print();
+		puzzle.parseResult();
 	}
 	inputFile.close();
 	return 0;

@@ -4,8 +4,6 @@ using namespace std;
 Cube::Cube(char array[54], string a){
 	for(int i = 0; i < 54; i++)
 		cubeValues[i] = array[i];
-		
-	outputFile.open(a);
 }
 
 void Cube::printE(string a){
@@ -89,7 +87,7 @@ void Cube::F(){
     cubeValues[44] = cubeValues[29];
     cubeValues[29] = cubeValues[45];
     cubeValues[45] = temp;
-    outputFile << "F\n";
+    instruction.push_back("F");
 }
 
 void Cube::Fi(){
@@ -119,7 +117,7 @@ void Cube::Fi(){
     cubeValues[15] = cubeValues[45];
     cubeValues[45] = cubeValues[29];
     cubeValues[29] = temp;
-    outputFile << "Fi\n";
+    instruction.push_back("Fi");
 }
 
 void Cube::R(){
@@ -149,7 +147,7 @@ void Cube::R(){
 	cubeValues[8] = cubeValues[53];
 	cubeValues[53] = cubeValues[18];
 	cubeValues[18] = temp;
-    outputFile << "R\n";
+    instruction.push_back("R");
 }
 
 void Cube::Ri(){
@@ -179,7 +177,7 @@ void Cube::Ri(){
 	cubeValues[44] = cubeValues[18];
 	cubeValues[18] = cubeValues[53];
 	cubeValues[53] = temp;
-    outputFile << "Ri\n";
+    instruction.push_back("Ri");
 }
 
 void Cube::L(){
@@ -209,7 +207,7 @@ void Cube::L(){
 	cubeValues[20] = cubeValues[51];
 	cubeValues[51] = cubeValues[6];
 	cubeValues[6] = temp;
-    outputFile << "L\n";
+    instruction.push_back("L");
 }
 
 void Cube::Li(){
@@ -239,7 +237,7 @@ void Cube::Li(){
 	cubeValues[42] = cubeValues[6];
 	cubeValues[6] = cubeValues[51];
 	cubeValues[51] = temp;
-    outputFile << "Li\n";
+    instruction.push_back("Li");
 }
 
 void Cube::B(){
@@ -269,7 +267,7 @@ void Cube::B(){
 	cubeValues[38] = cubeValues[17];
 	cubeValues[17] = cubeValues[51];
 	cubeValues[51] = temp;
-	outputFile << "B\n";
+    instruction.push_back("B");
 }
 
 void Cube::Bi(){
@@ -299,7 +297,7 @@ void Cube::Bi(){
 	cubeValues[27] = cubeValues[51];
 	cubeValues[51] = cubeValues[17];
 	cubeValues[17] = temp;
-    outputFile << "Bi\n";
+    instruction.push_back("Bi");
 }
 
 void Cube::U(){
@@ -329,7 +327,7 @@ void Cube::U(){
 	cubeValues[11] = cubeValues[20];
 	cubeValues[20] = cubeValues[29];
 	cubeValues[29] = temp;
-    outputFile << "U\n";
+    instruction.push_back("U");
 }
 
 void Cube::Ui(){
@@ -359,7 +357,7 @@ void Cube::Ui(){
 	cubeValues[2] = cubeValues[29];
 	cubeValues[29] = cubeValues[20];
 	cubeValues[20] = temp;
-    outputFile << "Ui\n";
+    instruction.push_back("Ui");
 }
 
 void Cube::D(){
@@ -389,7 +387,7 @@ void Cube::D(){
 	cubeValues[33] = cubeValues[24];
 	cubeValues[24] = cubeValues[15];
 	cubeValues[15] = temp;
-    outputFile << "D\n";
+    instruction.push_back("D");
 }
 
 void Cube::Di(){
@@ -419,7 +417,7 @@ void Cube::Di(){
 	cubeValues[6] = cubeValues[15];
 	cubeValues[15] = cubeValues[24];
 	cubeValues[24] = temp;
-    outputFile << "Di\n";
+    instruction.push_back("Di");
 }
 
 void Cube::TurnCube(){
@@ -489,7 +487,7 @@ void Cube::TurnCube(){
 	cubeValues[5] = cubeValues[14];
 	cubeValues[14] = cubeValues[23];
 	cubeValues[23] = temp;
-	outputFile << "TurnCube\n";
+    instruction.push_back("TC");
 }
 
 void Cube::RollCube(){
@@ -559,7 +557,7 @@ void Cube::RollCube(){
 	cubeValues[41] = cubeValues[28];
 	cubeValues[28] = cubeValues[48];
     cubeValues[48] = temp;
-	outputFile << "RollCube\n";
+    instruction.push_back("RC");
 }
 	
 void Cube::UpsideDownCube(){
@@ -695,7 +693,7 @@ void Cube::orient(){
 			this->TurnCube();
 		}
 	}					
-	outputFile << "Orient\n";
+    instruction.push_back("OC");
 }
 
 void Cube::whiteCross(){
@@ -1749,5 +1747,11 @@ void Cube::lastLayer_topEdges(){
 				completed = true;
 			}
 		}	
+	}
+}
+
+void Cube::parseResult(){
+	for(int i = 0; i < instruction.size(); i++){
+		cout << "Instruction " << i << " is " << instruction[i] << ".\n";
 	}
 }
