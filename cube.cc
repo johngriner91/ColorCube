@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-Cube::Cube(char array[54], string a){
+Cube::Cube(char array[54]){
 	for(int i = 0; i < 54; i++)
 		cubeValues[i] = array[i];
 }
@@ -1085,6 +1085,7 @@ void Cube::whiteCross(){
 				cross_index = 0;
 		} 
 	}
+	instruction.push_back("WhiteCross");
 }
 
 char Cube::getFColor(){
@@ -1365,6 +1366,7 @@ void Cube::whiteCorners(){
 			}
 		}
 	}
+	instruction.push_back("WhiteCorners");
 }	
 
 void Cube::middle_fallLeft(){
@@ -1397,115 +1399,147 @@ void Cube::middleLayer(){
 		if((this->at(3) == this->getFColor()) & (this->at(5) == this->getFColor()) & 
 		(this->at(12) == this->getRColor()) & (this->at(14) == this->getRColor()) & 
 		(this->at(21) == this->getBColor()) & (this->at(23) == this->getBColor()) & 
-		(this->at(30) == this->getLColor()) & (this->at(32) == this->getLColor())) 
+		(this->at(30) == this->getLColor()) & (this->at(32) == this->getLColor())){ 
+			instruction.push_back("Middle");
 			complete = true;
+		}	
 		else{
-			bool allyellow = true;
-			if(this->at(1) != 'y'){
-				allyellow=false;
-				bool wrongSide = true;
-				while(wrongSide){
-					if(this->at(1) == this->getFColor())
-						wrongSide= false;
-					else{
-						this->Ui();
-						this->TurnCube();
+			int situation = -1; 
+			bool notAlignedZero = false;
+			bool notAlignedOne = false;
+			bool notAlignedTwo = false;
+			bool notAlignedThree = false;
+			bool allYellowSides = false;
+
+			
+			if((this->at(1) != 'y') & (this->at(43) != 'y'))
+				situation = 0;
+			else if((this->at(10) != 'y') & (this->at(41) != 'y'))
+				situation = 1;
+			else if((this->at(19) != 'y') & (this->at(37) != 'y'))
+				situation = 2;
+			else if((this->at(28) != 'y') & (this->at(39) != 'y'))
+				situation = 3;
+			else
+				situation = 4;
+			
+			switch(situation){
+				case 0:
+					notAlignedZero = true;
+					while(notAlignedZero){
+						if(this->at(1) == this->getFColor())
+							notAlignedZero = false;
+						else{
+							this->Ui();
+							this->TurnCube();
+						}
 					}
-				}
-				if(this->at(43) == this->getRColor()){
-					this->middle_fallRight();
-				}
-				else{
-					this->middle_fallLeft();
-				}
-			}
-			else if(this->at(10) != 'y'){
-				this->TurnCube();
-				allyellow=false;
-				bool rightSide = false;
-				while(!rightSide){
-					if(this->at(1) == this->getFColor())
-						rightSide = true;
-					else{
-						this->Ui();
-						this->TurnCube();
-					}
-				}
-				if(this->at(43) == this->getRColor()){
-					this->middle_fallRight();
-				}
-				else{
-					this->middle_fallLeft();
-				}
-			}
-			else if(this->at(19) != 'y'){
-				this->TurnCube();
-				this->TurnCube();
-				allyellow=false;
-				bool rightSide = false;
-				while(!rightSide){
-					if(this->at(1) == this->getFColor())
-						rightSide = true;
-					else{
-						this->Ui();
-						this->TurnCube();
-					}
-				}
-				if(this->at(43) == this->getRColor()){
-					this->middle_fallRight();
-				}
-				else{
-					this->middle_fallLeft();
-				}
-			}
-			else if(this->at(28) != 'y'){
-				this->TurnCube();
-				this->TurnCube();
-				this->TurnCube();
-				allyellow=false;
-				bool rightSide = false;
-				while(!rightSide){
-					if(this->at(1) == this->getFColor())
-						rightSide = true;
-					else{
-						this->Ui();
-						this->TurnCube();
-					}
-				}
-				if(this->at(43) == this->getRColor()){
-					this->middle_fallRight();
-				}
-				else{
-					this->middle_fallLeft();
-				}
-			}
-			if(allyellow){
-				bool wrongSide = true;
-				while(wrongSide){
-					if(this->at(43) != this->at(4)){
-						this->Ui();
-						this->TurnCube();
-					}
+					if(this->at(43) == this->getRColor())
+						this->middle_fallRight();			
 					else
-						wrongSide = false;
-				}
-				
-				if(this->at(3) != this->at(4)){
+						this->middle_fallLeft();
+					break;
+				case 1:
+					this->TurnCube();
+					notAlignedOne = true;
+					while(notAlignedOne){
+						if(this->at(1) == this->getFColor())
+							notAlignedOne = false;
+						else{
+							this->Ui();
+							this->TurnCube();
+						}
+					}
+					if(this->at(43) == this->getRColor())
+						this->middle_fallRight();
+					
+					else
+						this->middle_fallLeft();
+					break;
+				case 2:
+					this->TurnCube();
+					this->TurnCube();
+					notAlignedTwo = true;
+					while(notAlignedTwo){
+						if(this->at(1) == this->getFColor())
+							notAlignedTwo = false;
+						else{
+							this->Ui();
+							this->TurnCube();
+						}
+					}
+					if(this->at(43) == this->getRColor())
+						this->middle_fallRight();
+					
+					else
+						this->middle_fallLeft();
+					break;
+				case 3:
 					this->TurnCube();
 					this->TurnCube();
 					this->TurnCube();
-					this->F();
-					this->middle_fallRight();
-				}
-				else{
-					this->TurnCube();
-					this->Fi();
-					this->middle_fallLeft();
-				}
+					notAlignedThree = true;
+					while(notAlignedThree){
+						if(this->at(1) == this->getFColor())
+							notAlignedThree = false;
+						else{
+							this->Ui();
+							this->TurnCube();
+						}
+					}
+					if(this->at(43) == this->getRColor())
+						this->middle_fallRight();	
+					else
+						this->middle_fallLeft();
+					break;
+				case 4:
+					allYellowSides = false;
+					if((this->at(1) == 'y') & (this->at(10) == 'y') &
+						(this->at(19) == 'y') & (this->at(28) == 'y'))
+							allYellowSides = true;
+					if(allYellowSides){
+						bool wrongSide = true;
+						while(wrongSide){
+							if(this->at(43) != this->at(4)){
+								this->Ui();
+								this->TurnCube();
+							}
+							else
+								wrongSide = false;
+						}
+						
+						if(this->at(3) != this->at(4)){
+							this->TurnCube();
+							this->TurnCube();
+							this->TurnCube();
+							this->U();
+							this->middle_fallRight();
+						}
+						else{
+							this->TurnCube();
+							this->Ui();
+							this->middle_fallLeft();
+						}			
+					}
+					else{
+						while(this->at(1) == 'y')
+							this->U();
+						while(this->at(1) != this->at(4)){
+							this->Ui();
+							this->TurnCube();
+						}
+						if(this->at(3) != this->at(4))
+							this->middle_fallLeft();
+						else
+							this->middle_fallRight();		
+					}
+					break;
+				default:
+					this->printE("Hit default case in Middle Layer switch statement");
 			}
 		}
-	}
-}
+		}
+		}		 
 
 void Cube::yellowCross(){
 	bool completed = false;
@@ -1513,6 +1547,7 @@ void Cube::yellowCross(){
 		if((this->at(37) == 'y') & (this->at(39) == 'y') & 
 		(this->at(41) == 'y') & (this->at(43) == 'y')){
 			completed = true;
+			instruction.push_back("YellowCross");			
 			return;
 		}
 		else{
@@ -1550,7 +1585,7 @@ void Cube::yellowCross(){
 				this->Fi();
 			}
 		}
-	} // end while loop
+	} 
 }	
 
 void Cube::yellowCrossSequence(){
@@ -1592,7 +1627,8 @@ void Cube::yellowCorners(){
 				this->U();
 			this->yellowCrossSequence();
 		}
-		else{
+		else{	
+			instruction.push_back("YellowCorners");
 			return;
 		}
 	}
@@ -1640,6 +1676,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
+		instruction.push_back("LLC");
 		return;
 	}
 	else if(situation == 1){
@@ -1651,6 +1688,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
+		instruction.push_back("LLC");
 		return;	
 	}
 	else if(situation == 2){
@@ -1663,6 +1701,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
+		instruction.push_back("LLC");
 		return;		
 	}
 	else if(situation == 3){
@@ -1676,6 +1715,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
+		instruction.push_back("LLC");
 		return;		
 	}
 	else{
@@ -1728,6 +1768,7 @@ void Cube::lastLayer_topEdges(){
 			if(this->at(19) == this->at(21))
 				if(this->at(28) == this->at(29))
 					return;
+				
 	while(!completed){
 		i = 0;
 		while((this->at(19) != this->getBColor()) & (i < 4)){
@@ -1739,19 +1780,139 @@ void Cube::lastLayer_topEdges(){
 		}
 		else{
 			if(this->at(1) == this->getLColor()){
-				this->lastLayer_topSequenceClock();	
+				this->lastLayer_topSequenceClock();
+				instruction.push_back("DONE");	
 				completed = true;
 			}
 			else if(this->at(1) == this->getRColor()){
 				this->lastLayer_topSequenceCounter();
+				instruction.push_back("DONE");
 				completed = true;
 			}
 		}	
 	}
 }
 
+void Cube::removeRedundancy(){
+	for(int i = 0; i < instruction.size(); i++){
+		if(instruction[i] == "F"){
+			if(instruction[i+1] == "Fi")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "Fi"){
+			if(instruction[i+1] == "F")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "R"){
+			if(instruction[i+1] == "Ri")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "Ri"){
+			if(instruction[i+1] == "R")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "B"){
+			if(instruction[i+1] == "Bi")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "Bi"){
+			if(instruction[i+1] == "B")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "L"){
+			if(instruction[i+1] == "Li")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "Li"){
+			if(instruction[i+1] == "L")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "U"){
+			if(instruction[i+1] == "Ui")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "Ui"){
+			if(instruction[i+1] == "U")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "D"){
+			if(instruction[i+1] == "Di")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "Di"){
+			if(instruction[i+1] == "D")
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+1);
+		}
+		else if(instruction[i] == "TC"){
+			int j = i;
+			int k = 1;
+			while(instruction[j] == "TC"){
+				j++;
+				k++;
+			}
+			if(k == 3){
+				instruction[i] = "TCi";
+				instruction.erase(instruction.begin()+i+1, instruction.begin()+i+2);
+			}
+			else if(k >= 4){
+				int num = k/4;
+				num = num*4;
+				instruction.erase(instruction.begin()+i, instruction.begin()+i+num);
+			}
+		}
+	}
+}
+
 void Cube::parseResult(){
 	for(int i = 0; i < instruction.size(); i++){
-		cout << "Instruction " << i << " is " << instruction[i] << ".\n";
+		if(instruction[i] == "F")
+			cout << "Rotate the front face 90° clockwise.\n";
+		else if(instruction[i] == "Fi")
+			cout << "Rotate the front face 90° counterclockwise.\n";
+		else if(instruction[i] == "R")
+			cout << "Rotate the right face 90° clockwise.\n";
+		else if(instruction[i] == "Ri")
+			cout << "Rotate the right face 90° counterclockwise.\n";
+		else if(instruction[i] == "B")
+			cout << "Rotate the back face 90° clockwise.\n";
+		else if(instruction[i] == "Bi")
+			cout << "Rotate the back face 90° counterclockwise.\n";
+		else if(instruction[i] == "L")
+			cout << "Rotate the left face 90° clockwise.\n";
+		else if(instruction[i] == "Li")
+			cout << "Rotate the left face 90° counterclockwise.\n";
+		else if(instruction[i] == "U")
+			cout << "Rotate the top face 90° clockwise.\n";
+		else if(instruction[i] == "Ui")
+			cout << "Rotate the top face 90° counterclockwise.\n";
+		else if(instruction[i] == "D")
+			cout << "Rotate the bottom face 90° clockwise.\n";
+		else if(instruction[i] == "Di")
+			cout << "Rotate the bottom face 90° counterclockwise.\n";
+		else if(instruction[i] == "OC")
+			cout << "Orient the Cube.\nMake sure white is up and blue is front.\n";
+		else if(instruction[i] == "TC")
+			cout << "Keeping the same top color, turn the whole cube 90° clockwise.\n";
+		else if(instruction[i] == "TCi")
+			cout << "Keeping the same top color, turn the whole cube 90° counterclockwise.\n";
+		else if(instruction[i] == "RC")
+			cout << "Keeping the same front color, roll the whole cube 90° clockwise.\n";
+		else if(instruction[i] == "WhiteCross")
+			cout << "\nWhite Cross should be done.\n\n";
+		else if(instruction[i] == "WhiteCorners")
+			cout << "\nWhite Corners should be done.\n\n";
+		else if(instruction[i] == "Middle")
+			cout << "\nMiddle Layer should be done.\n\n";
+		else if(instruction[i] == "YellowCross")
+			cout << "\nYellow Cross should be done.\n\n";
+		else if(instruction[i] == "YellowCorners")
+			cout << "\nYellow Corners should be done.\n\n";
+		else if(instruction[i] == "LLC")
+			cout << "\nLast Layer corners should be done.\n\n";
+		else if(instruction[i] == "DONE")
+			cout << "\nCongratulations. Should be done.\n\n";
+		else
+			cout << "\n\nMYSTERY\n" << instruction[i] << "\n\n";
 	}
+
 }

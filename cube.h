@@ -7,7 +7,7 @@ using namespace std;
 
 class Cube{
 	public:
-		Cube(char array[54], string);
+		Cube(char array[54]);
 		void print();
 		char at(int);
 		int edgeOf(int);
@@ -35,6 +35,7 @@ class Cube{
 		void lastLayer_topSequenceCounter();
 		void lastLayer_topEdges();
 		void parseResult();
+		void removeRedundancy();
 	private:
 		char cubeValues[54];
 		void R();
