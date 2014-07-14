@@ -1,3 +1,15 @@
+/*
++---------------------------------------------------------------------------
+|
+|	Program:	Color Cube
+|	File:			cube.h
+|	Author: 	John Griner
+|
+|	This is the header file for the Cube class.
+|
++---------------------------------------------------------------------------
+*/
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -11,6 +23,7 @@ class Cube{
 		void print();
 		char at(int);
 		int edgeOf(int);
+		void solve_cube();
 		void orient();
 		void whiteCross();
 		void whiteCorners();

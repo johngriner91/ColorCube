@@ -59,7 +59,23 @@ void Cube::print(){
 			cout << cubeValues[i] << " ";
 	}
 }
-	
+
+void Cube::solve_cube(){
+	this->print();
+	this->orient();
+	this->whiteCross();
+	this->whiteCorners();
+	this->orient();
+	this->middleLayer();
+	this->yellowCross();
+	this->yellowCorners();
+	this->lastLayer_corners();
+	this->lastLayer_topEdges();
+	this->print();
+	this->removeRedundancy();
+	this->parseResult();
+}
+
 void Cube::F(){
 	char temp = 'x';
 	temp = cubeValues[2];
@@ -516,7 +532,7 @@ void Cube::RollCube(){
 	cubeValues[38] = cubeValues[27];
 	cubeValues[27] = cubeValues[51];
 	cubeValues[51] = cubeValues[17];
-	cubeValues[17] = temp;	
+	cubeValues[17] = temp;
 	temp = cubeValues[2];
 	cubeValues[2] = cubeValues[0];
     cubeValues[0] = cubeValues[6];
@@ -541,7 +557,7 @@ void Cube::RollCube(){
     cubeValues[15] = cubeValues[44];
     cubeValues[44] = cubeValues[29];
     cubeValues[29] = cubeValues[45];
-    cubeValues[45] = temp;	
+    cubeValues[45] = temp;
 	temp = cubeValues[10];
 	cubeValues[10] = cubeValues[39];
 	cubeValues[39] = cubeValues[34];
@@ -559,7 +575,7 @@ void Cube::RollCube(){
     cubeValues[48] = temp;
     instruction.push_back("RC");
 }
-	
+
 void Cube::UpsideDownCube(){
 	for(int i = 0; i < 2; i++){
 		RollCube();
@@ -573,80 +589,80 @@ char Cube::at(int a){
 int Cube::edgeOf(int a){
 	switch(a){
 		case 1:
-			return 43; 
+			return 43;
 			break;
 		case 3:
-			return 32; 
-			break;			
+			return 32;
+			break;
 		case 5:
-			return 12; 
+			return 12;
 			break;
 		case 7:
-			return 46; 
-			break;			
+			return 46;
+			break;
 		case 10:
-			return 41; 
+			return 41;
 			break;
 		case 12:
-			return 5; 
-			break;			
+			return 5;
+			break;
 		case 14:
-			return 21; 
+			return 21;
 			break;
 		case 16:
-			return 50; 
-			break;			
+			return 50;
+			break;
 		case 19:
-			return 37; 
+			return 37;
 			break;
 		case 21:
-			return 14; 
-			break;			
+			return 14;
+			break;
 		case 23:
-			return 30; 
+			return 30;
 			break;
 		case 25:
-			return 52; 
-			break;	
+			return 52;
+			break;
 		case 28:
-			return 39; 
+			return 39;
 			break;
 		case 30:
-			return 23; 
-			break;			
+			return 23;
+			break;
 		case 32:
-			return 3; 
+			return 3;
 			break;
 		case 34:
-			return 48; 
-			break;			
+			return 48;
+			break;
 		case 37:
-			return 19; 
+			return 19;
 			break;
 		case 39:
-			return 28; 
-			break;			
+			return 28;
+			break;
 		case 41:
-			return 10; 
+			return 10;
 			break;
 		case 43:
-			return 1; 
-			break;			
+			return 1;
+			break;
 		case 46:
-			return 7; 
+			return 7;
 			break;
 		case 48:
-			return 34; 
-			break;			
+			return 34;
+			break;
 		case 50:
-			return 16; 
+			return 16;
 			break;
 		case 52:
-			return 25; 
-			break;		
+			return 25;
+			break;
 		default:
 			return -1;
-			break;		
+			break;
 	}
 }
 
@@ -685,26 +701,26 @@ void Cube::orient(){
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
-	
+
 	else if(this->at(49)=='w'){
 		this->RollCube();
 		this->RollCube();
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
-	}					
+	}
     instruction.push_back("OC");
 }
 
 void Cube::whiteCross(){
-	
+
 	int edges[24] = {1, 3, 5, 7,
-					10, 12, 14, 16, 
-					19, 21, 23, 25, 
-					28, 30, 32, 34, 
-					37, 39, 41, 43, 
+					10, 12, 14, 16,
+					19, 21, 23, 25,
+					28, 30, 32, 34,
+					37, 39, 41, 43,
 					46, 48, 50, 52};
-					
+
 	if(	(this->at(37)=='w')||(this->at(39)=='w')|| (this->at(41)=='w')||
 		(this->at(43)=='w')){
 		if(this->at(37)=='w'){
@@ -761,7 +777,7 @@ void Cube::whiteCross(){
 		}
 	}
 
-	int cross_index = 0;	
+	int cross_index = 0;
 	while(cross_index < 24){
 		if(this->at(edges[cross_index]) != 'w'){
 			cross_index++;
@@ -791,7 +807,7 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 2:
 					this->F();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
@@ -812,7 +828,7 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 4:
 					this->TurnCube();
 					this->F();
@@ -837,7 +853,7 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 6:
 					this->TurnCube();
 					this->F();
@@ -851,7 +867,7 @@ void Cube::whiteCross(){
 					this->Ui();
 					break;
 				case 7:
-					this->TurnCube();		
+					this->TurnCube();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
 						this->TurnCube();
@@ -860,10 +876,10 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 8:
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
 					this->F();
 					this->F();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
@@ -876,8 +892,8 @@ void Cube::whiteCross(){
 					this->Ui();
 					break;
 				case 9:
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
 					this->Fi();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
@@ -887,10 +903,10 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 10:
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
 					this->F();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
@@ -902,8 +918,8 @@ void Cube::whiteCross(){
 					this->Ui();
 					break;
 				case 11:
-					this->TurnCube();				
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
 						this->TurnCube();
@@ -912,11 +928,11 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;	
+					break;
 				case 12:
-					this->TurnCube();		
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
+					this->TurnCube();
 					this->F();
 					this->F();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
@@ -929,9 +945,9 @@ void Cube::whiteCross(){
 					this->Ui();
 					break;
 				case 13:
-					this->TurnCube();		
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
+					this->TurnCube();
 					this->Fi();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
@@ -941,11 +957,11 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 14:
-					this->TurnCube();		
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
+					this->TurnCube();
 					this->F();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
@@ -957,9 +973,9 @@ void Cube::whiteCross(){
 					this->Ui();
 					break;
 				case 15:
-					this->TurnCube();		
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
+					this->TurnCube();
 					while(this->at(4) != (this->at(this->edgeOf(7)))){
 						this->D();
 						this->TurnCube();
@@ -968,15 +984,15 @@ void Cube::whiteCross(){
 					this->U();
 					this->Li();
 					this->Ui();
-					break;			
+					break;
 				case 16:
 					if(this->at(19) == this->at(22)){
 						cross_index++;
 						topOne = true;
-					}				
-					else{		
-						this->TurnCube();		
-						this->TurnCube();	
+					}
+					else{
+						this->TurnCube();
+						this->TurnCube();
 						this->F();
 						this->F();
 						while(this->at(4) != (this->at(this->edgeOf(46)))){
@@ -984,7 +1000,7 @@ void Cube::whiteCross(){
 							this->TurnCube();
 						}
 						this->F();
-						this->F();					
+						this->F();
 					}
 					break;
 				case 17:
@@ -993,9 +1009,9 @@ void Cube::whiteCross(){
 						topOne = true;
 					}
 					else{
-						this->TurnCube();		
-						this->TurnCube();		
-						this->TurnCube();		
+						this->TurnCube();
+						this->TurnCube();
+						this->TurnCube();
 						this->F();
 						this->F();
 						while(this->at(4) != (this->at(this->edgeOf(46)))){
@@ -1003,7 +1019,7 @@ void Cube::whiteCross(){
 							this->TurnCube();
 						}
 						this->F();
-						this->F();				
+						this->F();
 					}
 					break;
 				case 18:
@@ -1012,7 +1028,7 @@ void Cube::whiteCross(){
 						topOne = true;
 					}
 					else{
-						this->TurnCube();		
+						this->TurnCube();
 						this->F();
 						this->F();
 						while(this->at(4) != (this->at(this->edgeOf(46)))){
@@ -1020,9 +1036,9 @@ void Cube::whiteCross(){
 							this->TurnCube();
 						}
 						this->F();
-						this->F();	
+						this->F();
 					}
-					break;	
+					break;
 				case 19:
 					if(this->at(1) == this->at(4)){
 						cross_index++;
@@ -1036,54 +1052,54 @@ void Cube::whiteCross(){
 							this->TurnCube();
 						}
 						this->F();
-						this->F();				
+						this->F();
 					}
-					break;			
+					break;
 				case 20:
 					while(this->at(4) != (this->at(this->edgeOf(46)))){
 						this->D();
 						this->TurnCube();
 					}
 					this->F();
-					this->F();				 
+					this->F();
 					break;
 				case 21:
-					this->TurnCube();		
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
+					this->TurnCube();
 					while(this->at(4) != (this->at(this->edgeOf(46)))){
 						this->D();
 						this->TurnCube();
 					}
 					this->F();
-					this->F();	
-					break;			
+					this->F();
+					break;
 				case 22:
-					this->TurnCube();		
+					this->TurnCube();
 					while(this->at(4) != (this->at(this->edgeOf(46)))){
 						this->D();
 						this->TurnCube();
 					}
 					this->F();
-					this->F();	
+					this->F();
 					break;
 				case 23:
-					this->TurnCube();		
-					this->TurnCube();		
+					this->TurnCube();
+					this->TurnCube();
 					while(this->at(4) != (this->at(this->edgeOf(46)))){
 						this->D();
 						this->TurnCube();
 					}
 					this->F();
-					this->F();	
-					break;		
+					this->F();
+					break;
 				default:
 					cout << "ERROR!!!";
-					break;	
+					break;
 			} // end switch statement
 			if(!topOne)
 				cross_index = 0;
-		} 
+		}
 	}
 	instruction.push_back("WhiteCross");
 }
@@ -1167,14 +1183,14 @@ void Cube::whiteCorners(){
 						36, 38, 42, 44,
 						45, 47, 51, 53 };
 
-	int cornerIndex = 0; 
+	int cornerIndex = 0;
 	while(cornerIndex < 24){
 		//cout << "CornerIndex is " << cornerIndex << ".\n";
 		if(this->at(corner[cornerIndex]) != 'w')
 			cornerIndex++;
 		else if((16 <= cornerIndex) & (cornerIndex <= 19)){
 			if(cornerIndex == 16){
-				if((this->at(27) == this->getLColor()) & 
+				if((this->at(27) == this->getLColor()) &
 					(this->at(20) == this->getBColor()))
 					cornerIndex++;
 				else{
@@ -1194,28 +1210,28 @@ void Cube::whiteCorners(){
 					this->Di();
 					this->Di();
 					this->Ri();
-					this->correctSix(cornerIndex);					
+					this->correctSix(cornerIndex);
 				}
 			}
 			else if(cornerIndex == 18){
-				if((this->at(0) == this->getFColor()) & 
+				if((this->at(0) == this->getFColor()) &
 					(this->at(29) == this->getLColor()))
 					cornerIndex++;
 				else{
 					this->L();
-					this->D();	
+					this->D();
 					this->Li();
 					this->D();
 					this->correctSix(cornerIndex);
 				}
 			}
 			else if(cornerIndex == 19){
-				if((this->at(2) == this->getFColor()) & 
+				if((this->at(2) == this->getFColor()) &
 					(this->at(9) == this->getRColor()))
 					cornerIndex++;
 				else{
 					this->Ri();
-					this->Di();	
+					this->Di();
 					this->R();
 					this->D();
 					this->correctEight(cornerIndex);
@@ -1242,7 +1258,7 @@ void Cube::whiteCorners(){
 					break;
 				case 2:
 					this->correctSix(cornerIndex);
-					break;	
+					break;
 				case 3:
 					this->correctEight(cornerIndex);
 					break;
@@ -1263,11 +1279,11 @@ void Cube::whiteCorners(){
 				case 6:
 					this->Di();
 					this->correctSix(cornerIndex);
-					break;	
+					break;
 				case 7:
 					this->Di();
 					this->correctEight(cornerIndex);
-					break;	
+					break;
 				case 8:
 					this->Bi();
 					this->Di();
@@ -1367,7 +1383,7 @@ void Cube::whiteCorners(){
 		}
 	}
 	instruction.push_back("WhiteCorners");
-}	
+}
 
 void Cube::middle_fallLeft(){
 	this->Ui();
@@ -1396,22 +1412,22 @@ void Cube::middleLayer(){
 	this->RollCube();
 	bool complete = false;
 	while(!complete){
-		if((this->at(3) == this->getFColor()) & (this->at(5) == this->getFColor()) & 
-		(this->at(12) == this->getRColor()) & (this->at(14) == this->getRColor()) & 
-		(this->at(21) == this->getBColor()) & (this->at(23) == this->getBColor()) & 
-		(this->at(30) == this->getLColor()) & (this->at(32) == this->getLColor())){ 
+		if((this->at(3) == this->getFColor()) & (this->at(5) == this->getFColor()) &
+		(this->at(12) == this->getRColor()) & (this->at(14) == this->getRColor()) &
+		(this->at(21) == this->getBColor()) & (this->at(23) == this->getBColor()) &
+		(this->at(30) == this->getLColor()) & (this->at(32) == this->getLColor())){
 			instruction.push_back("Middle");
 			complete = true;
-		}	
+		}
 		else{
-			int situation = -1; 
+			int situation = -1;
 			bool notAlignedZero = false;
 			bool notAlignedOne = false;
 			bool notAlignedTwo = false;
 			bool notAlignedThree = false;
 			bool allYellowSides = false;
 
-			
+
 			if((this->at(1) != 'y') & (this->at(43) != 'y'))
 				situation = 0;
 			else if((this->at(10) != 'y') & (this->at(41) != 'y'))
@@ -1422,7 +1438,7 @@ void Cube::middleLayer(){
 				situation = 3;
 			else
 				situation = 4;
-			
+
 			switch(situation){
 				case 0:
 					notAlignedZero = true;
@@ -1435,7 +1451,7 @@ void Cube::middleLayer(){
 						}
 					}
 					if(this->at(43) == this->getRColor())
-						this->middle_fallRight();			
+						this->middle_fallRight();
 					else
 						this->middle_fallLeft();
 					break;
@@ -1452,7 +1468,7 @@ void Cube::middleLayer(){
 					}
 					if(this->at(43) == this->getRColor())
 						this->middle_fallRight();
-					
+
 					else
 						this->middle_fallLeft();
 					break;
@@ -1470,7 +1486,7 @@ void Cube::middleLayer(){
 					}
 					if(this->at(43) == this->getRColor())
 						this->middle_fallRight();
-					
+
 					else
 						this->middle_fallLeft();
 					break;
@@ -1488,7 +1504,7 @@ void Cube::middleLayer(){
 						}
 					}
 					if(this->at(43) == this->getRColor())
-						this->middle_fallRight();	
+						this->middle_fallRight();
 					else
 						this->middle_fallLeft();
 					break;
@@ -1507,7 +1523,7 @@ void Cube::middleLayer(){
 							else
 								wrongSide = false;
 						}
-						
+
 						if(this->at(3) != this->at(4)){
 							this->TurnCube();
 							this->TurnCube();
@@ -1519,7 +1535,7 @@ void Cube::middleLayer(){
 							this->TurnCube();
 							this->Ui();
 							this->middle_fallLeft();
-						}			
+						}
 					}
 					else{
 						while(this->at(1) == 'y')
@@ -1531,7 +1547,7 @@ void Cube::middleLayer(){
 						if(this->at(3) != this->at(4))
 							this->middle_fallLeft();
 						else
-							this->middle_fallRight();		
+							this->middle_fallRight();
 					}
 					break;
 				default:
@@ -1539,15 +1555,15 @@ void Cube::middleLayer(){
 			}
 		}
 		}
-		}		 
+		}
 
 void Cube::yellowCross(){
 	bool completed = false;
 	while(!completed){
-		if((this->at(37) == 'y') & (this->at(39) == 'y') & 
+		if((this->at(37) == 'y') & (this->at(39) == 'y') &
 		(this->at(41) == 'y') & (this->at(43) == 'y')){
 			completed = true;
-			instruction.push_back("YellowCross");			
+			instruction.push_back("YellowCross");
 			return;
 		}
 		else{
@@ -1585,8 +1601,8 @@ void Cube::yellowCross(){
 				this->Fi();
 			}
 		}
-	} 
-}	
+	}
+}
 
 void Cube::yellowCrossSequence(){
 	this->R();
@@ -1610,8 +1626,8 @@ void Cube::yellowCorners(){
 		if(this->at(42) == 'y')
 			numCorners++;
 		if(this->at(44) == 'y')
-			numCorners++;		
-		
+			numCorners++;
+
 		if(numCorners == 0){
 			while(this->at(29) != 'y')
 				this->U();
@@ -1620,14 +1636,14 @@ void Cube::yellowCorners(){
 		else if(numCorners == 1){
 			while(this->at(42) != 'y')
 				this->U();
-			this->yellowCrossSequence();			
+			this->yellowCrossSequence();
 		}
 		else if(numCorners == 2){
 			while(this->at(0) != 'y')
 				this->U();
 			this->yellowCrossSequence();
 		}
-		else{	
+		else{
 			instruction.push_back("YellowCorners");
 			return;
 		}
@@ -1658,16 +1674,16 @@ void Cube::lastLayer_cornerSequence(){
 void Cube::lastLayer_corners(){
 	int situation = 0;
 	if(this->at(0) == this->at(2))
-		situation = 0; 
+		situation = 0;
 	else if(this->at(9) == this->at(11))
 		situation = 1;
 	else if(this->at(18) == this->at(20))
-		situation = 2; 
+		situation = 2;
 	else if(this->at(27) == this->at(29))
 		situation = 3;
 	else
 		situation = 4;
-			
+
 	if(situation == 0){
 		while(this->at(0) != this->at(4)){
 			this->Ui();
@@ -1689,7 +1705,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;	
+		return;
 	}
 	else if(situation == 2){
 		this->TurnCube();
@@ -1702,7 +1718,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;		
+		return;
 	}
 	else if(situation == 3){
 		this->TurnCube();
@@ -1716,7 +1732,7 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;		
+		return;
 	}
 	else{
 		while(this->at(0) != this->at(4)){
@@ -1727,37 +1743,37 @@ void Cube::lastLayer_corners(){
 		this->TurnCube();
 		this->lastLayer_cornerSequence();
 		this->lastLayer_corners();
-	}	
+	}
 }
 
 void Cube::lastLayer_topSequenceClock(){
-	this->F();	
-	this->F();	
-	this->U();	
-	this->L();	
-	this->Ri();	
-	this->F();	
-	this->F();	
-	this->Li();	
-	this->R();	
-	this->U();	
-	this->F();	
-	this->F();	
+	this->F();
+	this->F();
+	this->U();
+	this->L();
+	this->Ri();
+	this->F();
+	this->F();
+	this->Li();
+	this->R();
+	this->U();
+	this->F();
+	this->F();
 }
 
 void Cube::lastLayer_topSequenceCounter(){
-	this->F();	
-	this->F();	
-	this->Ui();	
-	this->L();	
-	this->Ri();	
-	this->F();	
-	this->F();	
-	this->Li();	
-	this->R();	
-	this->Ui();	
-	this->F();	
-	this->F();	
+	this->F();
+	this->F();
+	this->Ui();
+	this->L();
+	this->Ri();
+	this->F();
+	this->F();
+	this->Li();
+	this->R();
+	this->Ui();
+	this->F();
+	this->F();
 }
 
 void Cube::lastLayer_topEdges(){
@@ -1768,7 +1784,7 @@ void Cube::lastLayer_topEdges(){
 			if(this->at(19) == this->at(21))
 				if(this->at(28) == this->at(29))
 					return;
-				
+
 	while(!completed){
 		i = 0;
 		while((this->at(19) != this->getBColor()) & (i < 4)){
@@ -1776,12 +1792,12 @@ void Cube::lastLayer_topEdges(){
 			i++;
 		}
 		if(i == 4){
-			this->lastLayer_topSequenceClock();	
+			this->lastLayer_topSequenceClock();
 		}
 		else{
 			if(this->at(1) == this->getLColor()){
 				this->lastLayer_topSequenceClock();
-				instruction.push_back("DONE");	
+				instruction.push_back("DONE");
 				completed = true;
 			}
 			else if(this->at(1) == this->getRColor()){
@@ -1789,7 +1805,7 @@ void Cube::lastLayer_topEdges(){
 				instruction.push_back("DONE");
 				completed = true;
 			}
-		}	
+		}
 	}
 }
 
