@@ -28,26 +28,48 @@ class Cube{
 		char getUColor();			//	Returns the center color of the top face
 		char getDColor();			//	Returns the center color of the bottom face
 		int edgeOf(int);			// 	Returns color of the opposite edge of index a
+		void parseResult();		//	interprets the found solution
+		void optimizeData();	//	edits the solution method
+
 		void solve_cube();		//	calls the necessary functions to solve the cube
-		void orient();				// 	positions cube white side up, blue side front
-		void whiteCross();		//	solves the 'white cross' step
-		void whiteCorners();	//	solves the 'white corners' step
-		void correctSix(int&);//	solves the white corner from position six
-		void correctEight(int&);//	solves the white corner from position eight
-		void printE(string);	//	print function with error alerts
-		void middle_fallLeft();	//	middle layer solving
-		void middle_fallRight();//	middle layer solving
-		void middleLayer();		//	solves the middle layer, calls fallRight/fallLeft
-		void yellowCross();		//	solves the 'yellow cross' step
-		void yellowCrossSequence();	//	turns that solve the 'yellow cross'
-		void yellowCorners();	//	solves the 'yellow corners' step
-		void lastLayer_cornerSequence();	//	turns for the last layer corners
-		void lastLayer_corners();	//	solves the 'last layer corners'
-		void lastLayer_topSequenceClock();//	turns to rotate last layer clockwise
-		void lastLayer_topSequenceCounter();//	turns to rotate last layer counter
-		void lastLayer_topEdges();//	solves the last layer 'edge' pieces
-		void parseResult();	//	interprets the found solution
-		void removeRedundancy();	//	edits the solution method
+
+		// The following methods are methods are steps to solve the Rubik's
+		//		Cube, as per the Official Rubik's Cube Solution Guide.
+
+		// 	positions the cube white side up, blue side front
+		void orient();
+		//	solves the 'white cross' step
+		void whiteCross();
+		//	solves the 'white corners' step
+		void whiteCorners();
+		//	solves the white corner from position six
+		void correctSix(int&);
+		//	solves the white corner from position eight
+		void correctEight(int&);
+		//	print function with error alerts
+		void printE(string);
+		//	middle layer solving
+		void middle_fallLeft();
+		//	middle layer solving
+		void middle_fallRight();
+		//	solves the middle layer, calls fallRight/fallLeft
+		void middleLayer();
+		//	solves the 'yellow cross' step
+		void yellowCross();
+		//	turns that solve the 'yellow cross'
+		void yellowCrossSequence();
+		//	solves the 'yellow corners' step
+		void yellowCorners();
+		//	turns for the last layer corners
+		void lastLayer_cornerSequence();
+		//	solves the corner pieces on the last layer
+		void lastLayer_corners();
+		//	turns to rotate last layer edge pieces clockwise
+		void lastLayer_topSequenceClock();
+		//	turns to rotate last layer edge pieces counter
+		void lastLayer_topSequenceCounter();
+		//	solves the last layer 'edge' pieces
+		void lastLayer_topEdges();
 
 	private:
 		char cubeValues[54];	//	Stores the colors of each square on the cube.

@@ -1,11 +1,14 @@
 #include <iostream>
 using namespace std;
 
+// Constructor: instantiates the Cube object with the cubeValues data
 Cube::Cube(char array[54]){
 	for(int i = 0; i < 54; i++)
 		cubeValues[i] = array[i];
 }
 
+// This method was very good for terminal debugging. Prints out a large
+//		display and the 'error message' string parameter.
 void Cube::printE(string a){
 	cout << "\n\n******************************************************\n";
 	cout <<     "			ERROR FOUND			   ";
@@ -14,6 +17,18 @@ void Cube::printE(string a){
 	cout << "\n******************************************************\n\n";
 }
 
+// This method prints out the cube faces in a grid format. Prints in the
+//		following format.
+//		Side1:
+//		x x x
+//		x x x
+//		x x x
+//
+//		Side2:
+//		...
+//
+//	This method was also useful for debugging and going through the program
+//		step by step with a real Rubik's cube.
 void Cube::print(){
 	cout << "Printing the cubeValues\n-----------------";
 	cout << "\n\nFront\n-------\n";
@@ -60,9 +75,15 @@ void Cube::print(){
 	}
 }
 
+// This is the method that solves the Cube by calling the appropriate
+//		methods in the correct order.
 void Cube::solve_cube(){
+	// print the cube first
 	this->print();
+	// make sure the cube is oriented so the cube can be solved with the same
+	//		algorithm each time.
 	this->orient();
+	// call the appropriate methods to solve the cube.
 	this->whiteCross();
 	this->whiteCorners();
 	this->orient();
@@ -72,10 +93,12 @@ void Cube::solve_cube(){
 	this->lastLayer_corners();
 	this->lastLayer_topEdges();
 	this->print();
-	this->removeRedundancy();
+	this->optimizeData();
 	this->parseResult();
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the front-side face.
 void Cube::F(){
 	char temp = 'x';
 	temp = cubeValues[2];
@@ -106,6 +129,8 @@ void Cube::F(){
     instruction.push_back("F");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree counterclockwise rotation of the front-side face.
 void Cube::Fi(){
 	char temp = 'x';
     temp = cubeValues[0];
@@ -136,6 +161,8 @@ void Cube::Fi(){
     instruction.push_back("Fi");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the right-side face.
 void Cube::R(){
 	char temp = 'x';
 	temp = cubeValues[11];
@@ -166,6 +193,8 @@ void Cube::R(){
     instruction.push_back("R");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree counterclockwise rotation of the right-side face.
 void Cube::Ri(){
 	char temp = 'x';
 	temp = cubeValues[9];
@@ -196,6 +225,8 @@ void Cube::Ri(){
     instruction.push_back("Ri");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the left-side face.
 void Cube::L(){
 	char temp = 'x';
 	temp = cubeValues[30];
@@ -226,6 +257,8 @@ void Cube::L(){
     instruction.push_back("L");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree counterclockwise rotation of the left-side face.
 void Cube::Li(){
 	char temp = 'x';
 	temp = cubeValues[34];
@@ -256,6 +289,8 @@ void Cube::Li(){
     instruction.push_back("Li");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the back-side face.
 void Cube::B(){
     char temp = 'x';
 	temp = cubeValues[18];
@@ -286,6 +321,8 @@ void Cube::B(){
     instruction.push_back("B");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree counterclockwise rotation of the back-side face.
 void Cube::Bi(){
 	char temp = 'x';
 	temp = cubeValues[24];
@@ -316,6 +353,8 @@ void Cube::Bi(){
     instruction.push_back("Bi");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the top-side face.
 void Cube::U(){
 	char temp = 'x';
 	temp = cubeValues[38];
@@ -346,6 +385,8 @@ void Cube::U(){
     instruction.push_back("U");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree counterclockwise rotation of the top-side face.
 void Cube::Ui(){
 	char temp = 'x';
 	temp = cubeValues[36];
@@ -376,6 +417,8 @@ void Cube::Ui(){
     instruction.push_back("Ui");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the bottom-side face.
 void Cube::D(){
 	char temp = 'x';
 	temp = cubeValues[45];
@@ -406,6 +449,8 @@ void Cube::D(){
     instruction.push_back("D");
 }
 
+// Face turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree counterclockwise rotation of the bottom-side face.
 void Cube::Di(){
 	char temp = 'x';
 	temp = cubeValues[51];
@@ -436,6 +481,9 @@ void Cube::Di(){
     instruction.push_back("Di");
 }
 
+// Cube turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the whole cube. This method
+//		turns the cube keeping the top and bottom face the same.
 void Cube::TurnCube(){
 	char temp = 'x';
 	temp = cubeValues[51];
@@ -506,6 +554,9 @@ void Cube::TurnCube(){
     instruction.push_back("TC");
 }
 
+// Cube turn method. This method changed the values of the cubeValues array
+//		to simulate a 90 degree clockwise rotation of the whole cube. This method
+//		turns the cube keeping the front and back face the same.
 void Cube::RollCube(){
 	char temp = 'x';
 	temp = cubeValues[24];
@@ -535,29 +586,29 @@ void Cube::RollCube(){
 	cubeValues[17] = temp;
 	temp = cubeValues[2];
 	cubeValues[2] = cubeValues[0];
-    cubeValues[0] = cubeValues[6];
-    cubeValues[6] = cubeValues[8];
-    cubeValues[8] = temp;
-    temp = cubeValues[1];
-    cubeValues[1] = cubeValues[3];
-    cubeValues[3] = cubeValues[7];
-    cubeValues[7] = cubeValues[5];
-    cubeValues[5] = temp;
-    temp = cubeValues[9];
-    cubeValues[9] = cubeValues[42];
-    cubeValues[42] = cubeValues[35];
-    cubeValues[35] = cubeValues[47];
-    cubeValues[47] = temp;
-    temp = cubeValues[12];
-    cubeValues[12] = cubeValues[43];
-    cubeValues[43] = cubeValues[32];
-    cubeValues[32] = cubeValues[46];
-    cubeValues[46] = temp;
-    temp = cubeValues[15];
-    cubeValues[15] = cubeValues[44];
-    cubeValues[44] = cubeValues[29];
-    cubeValues[29] = cubeValues[45];
-    cubeValues[45] = temp;
+  cubeValues[0] = cubeValues[6];
+  cubeValues[6] = cubeValues[8];
+  cubeValues[8] = temp;
+  temp = cubeValues[1];
+  cubeValues[1] = cubeValues[3];
+  cubeValues[3] = cubeValues[7];
+  cubeValues[7] = cubeValues[5];
+  cubeValues[5] = temp;
+  temp = cubeValues[9];
+  cubeValues[9] = cubeValues[42];
+  cubeValues[42] = cubeValues[35];
+  cubeValues[35] = cubeValues[47];
+  cubeValues[47] = temp;
+  temp = cubeValues[12];
+  cubeValues[12] = cubeValues[43];
+  cubeValues[43] = cubeValues[32];
+  cubeValues[32] = cubeValues[46];
+  cubeValues[46] = temp;
+  temp = cubeValues[15];
+  cubeValues[15] = cubeValues[44];
+  cubeValues[44] = cubeValues[29];
+  cubeValues[29] = cubeValues[45];
+  cubeValues[45] = temp;
 	temp = cubeValues[10];
 	cubeValues[10] = cubeValues[39];
 	cubeValues[39] = cubeValues[34];
@@ -572,16 +623,20 @@ void Cube::RollCube(){
 	cubeValues[16] = cubeValues[41];
 	cubeValues[41] = cubeValues[28];
 	cubeValues[28] = cubeValues[48];
-    cubeValues[48] = temp;
-    instruction.push_back("RC");
+  cubeValues[48] = temp;
+  instruction.push_back("RC");
 }
 
+// Cube turn method. This method changed the values of the cubeValues array
+//		to simulate a 180 degree clockwise rotation of the whole cube. This method
+//		turns the cube keeping the front and back face the same.
 void Cube::UpsideDownCube(){
 	for(int i = 0; i < 2; i++){
 		RollCube();
     }
 }
 
+// This method returns the color of the face at an cubeValues index. 
 char Cube::at(int a){
 	return cubeValues[a];
 }
@@ -1809,7 +1864,7 @@ void Cube::lastLayer_topEdges(){
 	}
 }
 
-void Cube::removeRedundancy(){
+void Cube::optimizeData(){
 	for(int i = 0; i < instruction.size(); i++){
 		if(instruction[i] == "F"){
 			if(instruction[i+1] == "Fi")
