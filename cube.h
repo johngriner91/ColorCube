@@ -33,6 +33,8 @@ class Cube{
 
 		void solve_cube();		//	calls the necessary functions to solve the cube
 
+
+
 		// The following methods are methods are steps to solve the Rubik's
 		//		Cube, as per the Official Rubik's Cube Solution Guide.
 

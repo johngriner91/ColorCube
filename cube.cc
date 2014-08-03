@@ -27,8 +27,7 @@ void Cube::printE(string a){
 //		Side2:
 //		...
 //
-//	This method was also useful for debugging and going through the program
-//		step by step with a real Rubik's cube.
+
 void Cube::print(){
 	cout << "Printing the cubeValues\n-----------------";
 	cout << "\n\nFront\n-------\n";
@@ -631,16 +630,17 @@ void Cube::RollCube(){
 //		to simulate a 180 degree clockwise rotation of the whole cube. This method
 //		turns the cube keeping the front and back face the same.
 void Cube::UpsideDownCube(){
-	for(int i = 0; i < 2; i++){
 		RollCube();
-    }
+		RollCube();
 }
 
-// This method returns the color of the face at an cubeValues index. 
+//	This method returns the color of the face at an cubeValues index.
 char Cube::at(int a){
 	return cubeValues[a];
 }
 
+//	Switch statement. This returns the opposite side of an edge piece. This is
+//		used in part to "look around the cube" computationally.
 int Cube::edgeOf(int a){
 	switch(a){
 		case 1:
@@ -721,64 +721,95 @@ int Cube::edgeOf(int a){
 	}
 }
 
+//	By orienting the cube, the algorithm to solve the cube can be standardized.
 void Cube::orient(){
+
+	//	If the front side is the "white" side, correct so the top is white.
 	if(this->at(4)=='w'){
 		this->TurnCube();
 		this->RollCube();
+
+		//	Turn the cube so that the blue side is facing the front
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
 	}
+
+	//	If the left side is the "white" side, correct so the top is white.
 	else if(this->at(13)=='w'){
 		this->TurnCube();
 		this->TurnCube();
 		this->RollCube();
+
+		//	Turn the cube so that the blue side is facing the front
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
 	}
+
+	//	If the back side is the "white" side, correct so the top is white.
 	else if(this->at(22)=='w'){
 		this->TurnCube();
 		this->TurnCube();
 		this->TurnCube();
 		this->RollCube();
+
+		//	Turn the cube so that the blue side is facing the front
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
 	}
+
+	//	If the left side is the "white" side, correct so the top is white.
 	else if(this->at(31)=='w'){
 		this->RollCube();
+
+		//	Turn the cube so that the blue side is facing the front
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
 	}
+
+	//	If the top side is the "white" side, move on.
 	else if(this->at(40)=='w')
+
+		//	Turn the cube so that the blue side is facing the front
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
 
+	//	If the bottom side is the "white" side, correct so the top is white.
 	else if(this->at(49)=='w'){
 		this->RollCube();
 		this->RollCube();
+
+		//	Turn the cube so that the blue side is facing the front
 		while(this->at(4) != 'b'){
 			this->TurnCube();
 		}
 	}
+		// Note that the cube was oriented
     instruction.push_back("OC");
-}
+
+}	// End of Cube::orient()
 
 void Cube::whiteCross(){
 
-	int edges[24] = {1, 3, 5, 7,
-					10, 12, 14, 16,
-					19, 21, 23, 25,
-					28, 30, 32, 34,
-					37, 39, 41, 43,
-					46, 48, 50, 52};
+	// This array keeps track of the indexes of "edge" pieces.
+	int edges[24] = {	 1,  3,  5,  7, 10, 12, 14, 16,
+										19, 21, 23, 25, 28, 30, 32, 34,
+										37, 39, 41, 43, 46, 48, 50, 52};
 
+	//	This if statement checks to see if any of the white cross pieces are
+	//		already set.
 	if(	(this->at(37)=='w')||(this->at(39)=='w')|| (this->at(41)=='w')||
 		(this->at(43)=='w')){
+
+		//	If the top "cross" piece is set.
 		if(this->at(37)=='w'){
+
+			// The following few lines check to see if that white piece is lined up
+			//	on the right color.
 			char temp = this->at(19);
 			if(this->at(22) != temp){
 				if(this->at(13) == temp)
@@ -791,6 +822,8 @@ void Cube::whiteCross(){
 				}
 			}
 		}
+
+		//	If the left "cross" piece is set.
 		else if(this->at(39)=='w'){
 			char temp = this->at(28);
 			if(this->at(31) != temp){
@@ -804,8 +837,13 @@ void Cube::whiteCross(){
 				}
 			}
 		}
+
+		// If the right "cross" piece is set.
 		else if(this->at(41)=='w'){
 			char temp = this->at(10);
+
+			// The following few lines check to see if that white piece is lined up
+			//	on the right color.
 			if(this->at(13) != temp){
 				if(this->at(4) == temp)
 					this->U();
@@ -817,8 +855,13 @@ void Cube::whiteCross(){
 				}
 			}
 		}
+
+		//	If the bottom "cross" piece is set.
 		else if(this->at(43)=='w'){
 			char temp = this->at(2);
+
+			// The following few lines check to see if that white piece is lined up
+			//	on the right color.
 			if(this->at(4) != temp){
 				if(this->at(31) == temp)
 					this->U();
@@ -831,6 +874,12 @@ void Cube::whiteCross(){
 			}
 		}
 	}
+
+	// Moving on....
+
+	//	The algorithm for the following lines is to move the white piece to either
+	//		position 6 or 8. By doing this, we can standardize the solution. I don't
+	//		this is an optimal solution. .... work for later.
 
 	int cross_index = 0;
 	while(cross_index < 24){
@@ -1159,29 +1208,36 @@ void Cube::whiteCross(){
 	instruction.push_back("WhiteCross");
 }
 
+//	Return the index of the center of the front face
 char Cube::getFColor(){
 	return cubeValues[4];
 }
 
+//	Return the index of the center of the right face
 char Cube::getRColor(){
 	return cubeValues[13];
 }
 
+//	Return the index of the center of the back face
 char Cube::getBColor(){
 	return cubeValues[22];
 }
 
+//	Return the index of the center of the left face
 char Cube::getLColor(){
 	return cubeValues[31];
 }
 
+//	Return the index of the center of the top face
 char Cube::getUColor(){
 	return cubeValues[40];
 }
 
+//	Return the index of the center of the bottom face
 char Cube::getDColor(){
 	return cubeValues[49];
 }
+
 
 void Cube::correctSix(int &cornerIndex){
 	bool found = false;
@@ -1197,7 +1253,7 @@ void Cube::correctSix(int &cornerIndex){
 		}
 	}
 	if(i == 6){
-		this->printE("Error @ correctSix(cornerIndex).\nThe searched piece configuration does not seem to exist.\nPlease check work.");
+		this->printE("Error @ correctSix(cornerIndex)");
 	}
 	this->D();
 	this->L();
@@ -1934,6 +1990,10 @@ void Cube::optimizeData(){
 	}
 }
 
+
+//	This function reads in the elements of the instruction vector and translates
+//		the messages into more human readable messages (for step by step
+//		instructions.)
 void Cube::parseResult(){
 	for(int i = 0; i < instruction.size(); i++){
 		if(instruction[i] == "F")
