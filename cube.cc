@@ -17,6 +17,7 @@ void Cube::printE(string a){
 	cout << "\n******************************************************\n\n";
 }
 
+void Cube::print(){
 // This method prints out the cube faces in a grid format. Prints in the
 //		following format.
 //		Side1:
@@ -27,8 +28,6 @@ void Cube::printE(string a){
 //		Side2:
 //		...
 //
-
-void Cube::print(){
 	cout << "Printing the cubeValues\n-----------------";
 	cout << "\n\nFront\n-------\n";
 	for(int i = 0; i < 9; i++){
