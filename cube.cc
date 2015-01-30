@@ -71,6 +71,7 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
+	cout << "\n\nCompleted printing\n-----------------\n\n";
 }
 
 // This is the method that solves the Cube by calling the appropriate
@@ -82,14 +83,17 @@ void Cube::solve_cube(){
 	//		algorithm each time.
 	this->orient();
 	// call the appropriate methods to solve the cube.
+	this->print();
 	this->whiteCross();
+	cout << "\nWhite Cross should be done\n";
+	this->print();
 	this->whiteCorners();
 	this->orient();
 	this->middleLayer();
 	this->yellowCross();
 	this->yellowCorners();
-	this->lastLayer_corners();
-	this->lastLayer_topEdges();
+	this->lLayer_corners();
+	this->lLayer_topEdges();
 	this->print();
 	this->optimizeData();
 	this->parseResult();
@@ -125,6 +129,7 @@ void Cube::F(){
     cubeValues[29] = cubeValues[45];
     cubeValues[45] = temp;
     instruction.push_back("F");
+		cout << "F\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -157,7 +162,8 @@ void Cube::Fi(){
     cubeValues[45] = cubeValues[29];
     cubeValues[29] = temp;
     instruction.push_back("Fi");
-}
+		cout << "Fi\n";
+	}
 
 // Face turn method. This method changed the values of the cubeValues array
 //		to simulate a 90 degree clockwise rotation of the right-side face.
@@ -188,7 +194,8 @@ void Cube::R(){
 	cubeValues[8] = cubeValues[53];
 	cubeValues[53] = cubeValues[18];
 	cubeValues[18] = temp;
-    instruction.push_back("R");
+  instruction.push_back("R");
+	cout << "R\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -220,7 +227,8 @@ void Cube::Ri(){
 	cubeValues[44] = cubeValues[18];
 	cubeValues[18] = cubeValues[53];
 	cubeValues[53] = temp;
-    instruction.push_back("Ri");
+  instruction.push_back("Ri");
+	cout << "Ri\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -252,7 +260,8 @@ void Cube::L(){
 	cubeValues[20] = cubeValues[51];
 	cubeValues[51] = cubeValues[6];
 	cubeValues[6] = temp;
-    instruction.push_back("L");
+  instruction.push_back("L");
+	cout << "L\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -284,7 +293,8 @@ void Cube::Li(){
 	cubeValues[42] = cubeValues[6];
 	cubeValues[6] = cubeValues[51];
 	cubeValues[51] = temp;
-    instruction.push_back("Li");
+  instruction.push_back("Li");
+	cout << "Li\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -316,7 +326,8 @@ void Cube::B(){
 	cubeValues[38] = cubeValues[17];
 	cubeValues[17] = cubeValues[51];
 	cubeValues[51] = temp;
-    instruction.push_back("B");
+  instruction.push_back("B");
+	cout << "B\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -348,7 +359,8 @@ void Cube::Bi(){
 	cubeValues[27] = cubeValues[51];
 	cubeValues[51] = cubeValues[17];
 	cubeValues[17] = temp;
-    instruction.push_back("Bi");
+  instruction.push_back("Bi");
+	cout << "Bi\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -380,7 +392,8 @@ void Cube::U(){
 	cubeValues[11] = cubeValues[20];
 	cubeValues[20] = cubeValues[29];
 	cubeValues[29] = temp;
-    instruction.push_back("U");
+  instruction.push_back("U");
+	cout << "U\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -412,7 +425,8 @@ void Cube::Ui(){
 	cubeValues[2] = cubeValues[29];
 	cubeValues[29] = cubeValues[20];
 	cubeValues[20] = temp;
-    instruction.push_back("Ui");
+  instruction.push_back("Ui");
+	cout << "Ui\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -444,7 +458,8 @@ void Cube::D(){
 	cubeValues[33] = cubeValues[24];
 	cubeValues[24] = cubeValues[15];
 	cubeValues[15] = temp;
-    instruction.push_back("D");
+  instruction.push_back("D");
+	cout << "D\n";
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -476,7 +491,8 @@ void Cube::Di(){
 	cubeValues[6] = cubeValues[15];
 	cubeValues[15] = cubeValues[24];
 	cubeValues[24] = temp;
-    instruction.push_back("Di");
+  instruction.push_back("Di");
+	cout << "Di\n";
 }
 
 // Cube turn method. This method changed the values of the cubeValues array
@@ -549,7 +565,8 @@ void Cube::TurnCube(){
 	cubeValues[5] = cubeValues[14];
 	cubeValues[14] = cubeValues[23];
 	cubeValues[23] = temp;
-    instruction.push_back("TC");
+  instruction.push_back("TC");
+	cout << "TC\n";
 }
 
 // Cube turn method. This method changed the values of the cubeValues array
@@ -623,6 +640,7 @@ void Cube::RollCube(){
 	cubeValues[28] = cubeValues[48];
   cubeValues[48] = temp;
   instruction.push_back("RC");
+	cout << "RC\n";
 }
 
 // Cube turn method. This method changed the values of the cubeValues array
@@ -789,8 +807,10 @@ void Cube::orient(){
 	}
 		// Note that the cube was oriented
     instruction.push_back("OC");
+		cout << "The cube has been oriented.\n\n";
 
 }	// End of Cube::orient()
+
 
 void Cube::whiteCross(){
 
@@ -1249,6 +1269,7 @@ void Cube::correctSix(int &cornerIndex){
 		else{
 			this->D();
 			this->TurnCube();
+			i++;
 		}
 	}
 	if(i == 6){
@@ -1276,7 +1297,7 @@ void Cube::correctEight(int &cornerIndex){
 		}
 	}
 	if(i == 6){
-		this->printE("Error @ correctSix(cornerIndex).\nThe searched piece configuration does not seem to exist.\nPlease check work.");
+		this->printE("Error @ correctEight(cornerIndex).\nThe searched piece configuration does not seem to exist.\nPlease check work.");
 	}
 	this->Di();
 	this->Ri();
@@ -1296,8 +1317,9 @@ void Cube::whiteCorners(){
 	int cornerIndex = 0;
 	while(cornerIndex < 24){
 		//cout << "CornerIndex is " << cornerIndex << ".\n";
-		if(this->at(corner[cornerIndex]) != 'w')
+		if(this->at(corner[cornerIndex]) != 'w'){
 			cornerIndex++;
+		}
 		else if((16 <= cornerIndex) & (cornerIndex <= 19)){
 			if(cornerIndex == 16){
 				if((this->at(27) == this->getLColor()) &
@@ -1331,7 +1353,7 @@ void Cube::whiteCorners(){
 					this->L();
 					this->D();
 					this->Li();
-					this->D();
+					this->Di();
 					this->correctSix(cornerIndex);
 				}
 			}
@@ -1760,7 +1782,7 @@ void Cube::yellowCorners(){
 	}
 }
 
-void Cube::lastLayer_cornerSequence(){
+void Cube::lLayer_cornerSequence(){
 	if(this->at(0) == this->at(4))
 		if(this->at(9) == this->at(13))
 			if(this->at(18) == this->at(21))
@@ -1781,7 +1803,7 @@ void Cube::lastLayer_cornerSequence(){
 	this->Ui();
 }
 
-void Cube::lastLayer_corners(){
+void Cube::lLayer_corners(){
 	int situation = 0;
 	if(this->at(0) == this->at(2))
 		situation = 0;
@@ -1801,7 +1823,7 @@ void Cube::lastLayer_corners(){
 		}
 		this->TurnCube();
 		this->TurnCube();
-		this->lastLayer_cornerSequence();
+		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
 		return;
 	}
@@ -1813,7 +1835,7 @@ void Cube::lastLayer_corners(){
 		}
 		this->TurnCube();
 		this->TurnCube();
-		this->lastLayer_cornerSequence();
+		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
 		return;
 	}
@@ -1826,7 +1848,7 @@ void Cube::lastLayer_corners(){
 		}
 		this->TurnCube();
 		this->TurnCube();
-		this->lastLayer_cornerSequence();
+		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
 		return;
 	}
@@ -1840,7 +1862,7 @@ void Cube::lastLayer_corners(){
 		}
 		this->TurnCube();
 		this->TurnCube();
-		this->lastLayer_cornerSequence();
+		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
 		return;
 	}
@@ -1851,12 +1873,12 @@ void Cube::lastLayer_corners(){
 		}
 		this->TurnCube();
 		this->TurnCube();
-		this->lastLayer_cornerSequence();
-		this->lastLayer_corners();
+		this->lLayer_cornerSequence();
+		this->lLayer_corners();
 	}
 }
 
-void Cube::lastLayer_topSequenceClock(){
+void Cube::lLayer_topSequenceClock(){
 	this->F();
 	this->F();
 	this->U();
@@ -1871,7 +1893,7 @@ void Cube::lastLayer_topSequenceClock(){
 	this->F();
 }
 
-void Cube::lastLayer_topSequenceCounter(){
+void Cube::lLayer_topSequenceCounter(){
 	this->F();
 	this->F();
 	this->Ui();
@@ -1886,7 +1908,7 @@ void Cube::lastLayer_topSequenceCounter(){
 	this->F();
 }
 
-void Cube::lastLayer_topEdges(){
+void Cube::lLayer_topEdges(){
 	int i = 0;
 	bool completed = false;
 	if(this->at(1) == this->at(4))
@@ -1902,16 +1924,16 @@ void Cube::lastLayer_topEdges(){
 			i++;
 		}
 		if(i == 4){
-			this->lastLayer_topSequenceClock();
+			this->lLayer_topSequenceClock();
 		}
 		else{
 			if(this->at(1) == this->getLColor()){
-				this->lastLayer_topSequenceClock();
+				this->lLayer_topSequenceClock();
 				instruction.push_back("DONE");
 				completed = true;
 			}
 			else if(this->at(1) == this->getRColor()){
-				this->lastLayer_topSequenceCounter();
+				this->lLayer_topSequenceCounter();
 				instruction.push_back("DONE");
 				completed = true;
 			}
@@ -2044,5 +2066,7 @@ void Cube::parseResult(){
 		else
 			cout << "\n\nMYSTERY\n" << instruction[i] << "\n\n";
 	}
+
+	cout << "Number of Instructions: " << instruction.size() << ".\n";
 
 }
