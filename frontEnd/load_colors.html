@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+		<meta name="description" content="Color Cube">
+		<meta name="keywords" content="Color Cube">
+
+        <link rel="stylesheet" type="text/css" href="css/load_colors.css">
+
+		<title>Color Cube</title>
+
+        <!-- Bootstrap -->
+        <link href="../frontEnd/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
+        <!-- JQuery -->
+		<script charset="utf-8" src="examples/basic/scripts/jquery.js"></script>
+        
+        <!-- Javascript 
+
+        This is simply a place holder. I do not have this file yet.
+
+        <script src="scripts/populate_colors.js"></script> 
+        -->
+        
+        <h1 class="heading">Color Cube : Load the Colors</h1>
+	</head>
+    
+	<body>
+        <div class = "grid">
+            <!-- 1st row */ -->
+            <p id="Square1"></p>
+            <p id="Square2"></p>
+            <p id="Square3"></p>
+            <!-- 2nd row */ -->
+            <p id="Square4"></p>
+            <p id="Square5"></p>
+            <p id="Square6"></p>
+            <!-- 3rd row */ -->
+            <p id="Square7"></p>
+            <p id="Square8"></p>
+            <p id="Square9"></p>
+        </div>
+        
+    <script>
+    $(document).ready(function(){
+        $('.grid p').click(function(){
+            $(this).css("background-color", "red");
+        });
+    });
+    </script>
+	</body>
+</html>

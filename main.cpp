@@ -11,12 +11,13 @@
 |		be able to solve it too.
 |
 |
-|	How it works. 
+|	This is the main file. Because we are currently in development, we are
+|   assuming correct input and are doing not checking. This file reads in 
+|   the colors of a rubik's cube and calls the Cube::solve() function, which
+|   will itself call a few functions that will solve the cube.
 |
 +---------------------------------------------------------------------------
 */
-
-#include <fstream>
 #include "cube.h"
 #include "cube.cc"
 

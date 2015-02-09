@@ -5,15 +5,24 @@
 |	File:			cube.h
 |	Author: 	John Griner
 |
+|	Welcome to the Color Cube program.
+|	After reading in the colored faces of a rubiks cube, this program
+| 	solves the cube and prints out the proper steps so the user will
+|		be able to solve it too.
+|
+|
+|	This is the header file. It defines the cube class that will be used to 
+|   implement the digital rubik's cube.
 +---------------------------------------------------------------------------
 */
+
+#ifndef CUBE_H
+#define CUBE_H
 
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
-
-using namespace std;
 
 //	The Cube type to implement the virtual Rubiks Cube.
 class Cube{
@@ -36,22 +45,25 @@ class Cube{
 		// The following methods are methods are steps to solve the Rubik's
 		//		Cube, as per the Official Rubik's Cube Solution Guide.
 
-		void orient();                   //	positions the cube white side up, blue side front
+		void orient();                   //	positions the cube white up, blue front
 		void whiteCross();   	         	 //	solves the 'white cross' step
 		void whiteCorners();	           //	solves the 'white corners' step
-		void correctSix(int&);		       //	solves the white corner from position six
-		void correctEight(int&);		     //	solves the white corner from position eight
-		void printE(string);		         //	print function with error alerts
+		
+		//  Eventually, the following two methods will be replaced
+		void correctSix(int&);		       //	solves the white corner from position 6
+		void correctEight(int&);		     //	solves the white corner from position 8
+		
+		void printE(std::string);        //	print function with error alerts
 		void middle_fallLeft();	         //	middle layer solving
 		void middle_fallRight();		     //	middle layer solving
-		void middleLayer();		           //	solves the middle layer, calls fallRight/fallLeft
+		void middleLayer();		           //	solves the middle layer
 		void yellowCross();		           //	solves the 'yellow cross' step
 		void yellowCrossSequence();		   //	turns that solve the 'yellow cross'
 		void yellowCorners();		         //	solves the 'yellow corners' step
 		void lLayer_cornerSequence();		 //	turns for the last layer corners
-		void lLayer_corners();	 	       //	solves the corner pieces on the last layer
+		void lLayer_corners();	 	       //	solves the corner pieces of last layer
 		void lLayer_topSequenceClock();	 //	rotate last layer edge pieces clockwise
-		void lLayer_topSequenceCounter();//	turns to rotate last layer edge pieces counter
+		void lLayer_topSequenceCounter();//	rotate last layer edge pieces counter
 		void lLayer_topEdges();		       //	solves the last layer 'edge' pieces
 
 	private:
@@ -78,5 +90,7 @@ class Cube{
 
 		//	The following vector stores the steps to solve the cube. Because
 		//		the number of steps varies in length, a vector is used.
-		vector<string> instruction;
+		std::vector< std::string > instruction;
 };
+
+#endif

@@ -1,3 +1,21 @@
+/*
++---------------------------------------------------------------------------
+|
+|	Program:	Color Cube
+|	File:			main.cpp
+|	Author: 	John Griner
+|
+|	Welcome to the Color Cube program.
+|	After reading in the colored faces of a rubiks cube, this program
+| 	solves the cube and prints out the proper steps so the user will
+|		be able to solve it too.
+|
+|
+|	How it works. 
+|
++---------------------------------------------------------------------------
+*/
+
 #include <iostream>
 using namespace std;
 
@@ -7,19 +25,8 @@ Cube::Cube(char array[54]){
 		cubeValues[i] = array[i];
 }
 
-// This method was very good for terminal debugging. Prints out a large
-//		display and the 'error message' string parameter.
-void Cube::printE(string a){
-	cout << "\n\n******************************************************\n";
-	cout <<     "			ERROR FOUND			   ";
-	cout << "\n";
-	cout << a << "\n";
-	cout << "\n******************************************************\n\n";
-}
-
-void Cube::print(){
 // This method prints out the cube faces in a grid format. Prints in the
-//		following format.
+// following format.
 //		Side1:
 //		x x x
 //		x x x
@@ -28,6 +35,7 @@ void Cube::print(){
 //		Side2:
 //		...
 //
+void Cube::print(){
 	cout << "Printing the cubeValues\n-----------------";
 	cout << "\n\nFront\n-------\n";
 	for(int i = 0; i < 9; i++){
@@ -86,6 +94,7 @@ void Cube::solve_cube(){
 	this->print();
 	this->whiteCross();
 	cout << "\nWhite Cross should be done\n";
+	return;
 	this->print();
 	this->whiteCorners();
 	this->orient();
@@ -2069,4 +2078,15 @@ void Cube::parseResult(){
 
 	cout << "Number of Instructions: " << instruction.size() << ".\n";
 
+}
+
+
+// This method was very good for terminal debugging. Prints out a large
+//		display and the 'error message' string parameter.
+void Cube::printE(string error_message){
+	cout << "\n\n******************************************************\n";
+	cout <<  "\tERROR FOUND\t";
+	cout << "\n";
+	cout << error_message << "\n";
+	cout << "\n******************************************************\n\n";
 }

@@ -52,9 +52,9 @@ found online at http://rubiks.com/solving-guide/3x3.
 	+-----------+-----------------------+
 	|	1		      |	White Cross		       	|
 	|	2		      |	White Corners 		    |
-	|	3		      | 	Middle Layer		    |
-	|	4		      | 	Yellow Cross		    |
-	|	5		      | 	Yellow Corners		  |
+	|	3		      | Middle Layer	  	    |
+	|	4		      | Yellow Cross		      |
+	|	5		      | Yellow Corners	  	  |
 	|	6		      |	Last Layer Corners	  |
 	|	7		      |	Last Layer Edges	    |
 	+-----------+-----------------------+
