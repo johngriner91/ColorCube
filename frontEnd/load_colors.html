@@ -158,7 +158,10 @@
 			// --------------- Solve Button
       var $solve_button = $("#solve_button");
 			$solve_button.click(function() {
+				// --------------- Because the solve button was clicked,
+				// --------------- 	we still need to get the current colors.
 
+				// --------------- get the current square colors
       	var $square0_color = $("#Square0").css("background-color");
       	var $square1_color = $("#Square1").css("background-color");
       	var $square2_color = $("#Square2").css("background-color");
@@ -169,9 +172,13 @@
       	var $square7_color = $("#Square7").css("background-color");
       	var $square8_color = $("#Square8").css("background-color");
 
+				// --------------- This is the last side
       	var $side = 5;
+
+				// --------------- Simple increment variable
       	var $i = 0;
 
+				// --------------- Add the colors to the array
 				$color_values[($i++)+($side*9)] = $square0_color;
       	$color_values[($i++)+($side*9)] = $square1_color;
       	$color_values[($i++)+($side*9)] = $square2_color;
@@ -183,6 +190,8 @@
       	$color_values[($i++)+($side*9)] = $square8_color;
       	var $message = "";
 
+				// --------------- Create a string message showing indexes and colors
+				// --------------- 	Useful for debugging. 
 				for(var $i = 0; $i < 54; $i++)
 				{
       		$message += "Square "+$i+" is " + $color_values[$i] + ".\n";
