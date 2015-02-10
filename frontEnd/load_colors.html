@@ -6,48 +6,194 @@
 		<meta name="description" content="Color Cube">
 		<meta name="keywords" content="Color Cube">
 
-        <link rel="stylesheet" type="text/css" href="css/load_colors.css">
-        <link rel="shortcut icon" type="image/x-icon" href="../resource/cube_icon.ico">
+    <link rel="stylesheet" type="text/css" href="css/load_colors.css">
+    <link rel="shortcut icon" type="image/x-icon" href="../resource/cube_icon.ico">
 
-		<title>Color Cube</title>
+    <title>Color Cube</title>
 
-        <!-- Bootstrap -->
-        <link href="../frontEnd/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <!-- Bootstrap -->
+    <link href="../frontEnd/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
-        <!-- JQuery -->
+    <!-- JQuery -->
 		<script charset="utf-8" src="examples/basic/scripts/jquery.js"></script>
-        
-        <!-- Javascript 
 
-        This is simply a place holder. I do not have this file yet.
-
-        <script src="scripts/populate_colors.js"></script> 
-        -->
-        
-        <h1 class="heading">Color Cube : Load the Colors</h1>
+    <h1 class="heading">Color Cube : Load the Colors</h1>
 	</head>
-    
+
 	<body>
-        <div class = "grid">
-            <!-- 1st row */ -->
-            <p id="Square1"></p>
-            <p id="Square2"></p>
-            <p id="Square3"></p>
-            <!-- 2nd row */ -->
-            <p id="Square4"></p>
-            <p id="Square5"></p>
-            <p id="Square6"></p>
-            <!-- 3rd row */ -->
-            <p id="Square7"></p>
-            <p id="Square8"></p>
-            <p id="Square9"></p>
-        </div>
-        
+    <div class="heading" id="label_text">Front</div>
+    <div class = "grid">
+			<!-- 1st row */ -->
+    	<p id="Square0"></p>
+    	<p id="Square1"></p>
+    	<p id="Square2"></p>
+    	<!-- 2nd row */ -->
+    	<p id="Square3"></p>
+    	<p id="Square4"></p>
+    	<p id="Square5"></p>
+    	<!-- 3rd row */ -->
+    	<p id="Square6"></p>
+    	<p id="Square7"></p>
+    	<p id="Square8"></p>
+    </div>
+		<div class="buttons">
+			<button type="button" id="back_button" disabled>Back</button>
+			<button type="button" id="clear_button">Clear</button>
+			<button type="button" id="next_button">Next</button>
+			<button type="button" id="solve_button" disabled>Solve</button>
+		</div>
+
     <script>
     $(document).ready(function(){
-        $('.grid p').click(function(){
-            $(this).css("background-color", "red");
-        });
+
+			// --------------- Side index, front being 0, bottom being 5
+			var $side = 0;
+
+			// --------------- Colors of the small squares, in order
+      var $color_values = [];
+
+			// --------------- Index of next available color
+			var color_index = 0;
+
+
+			// --------------- Variable arrays, holding colors and sides
+			var $labels = ['Front', 'Right', 'Back', 'Left', 'Up', 'Down'];
+			var colors = ["red", "orange", "yellow", "green", "blue", "white"];
+
+
+			// --------------- When a small square is clicked, change the color
+			var $small_square = $('.grid p');
+			$small_square.css('background-color', "#d3d3d3");
+			$small_square.click(function () {
+				$(this).css('background-color', colors[++color_index % colors.length]);
+			});
+
+			// --------------- Button Handlers --------------- //
+
+
+			// --------------- Back Button
+      var $back_button = $("#back_button");
+			$back_button.click(function() {
+				// --------------- Looking at previous side
+        $side--;
+
+				// --------------- TODO : When we go back, if the colors
+				// --------------- 	have already been set, do we really need
+				// ---------------  to clear out the colors?
+				$('.grid p').css('background-color', "#d3d3d3");
+
+				// --------------- You can't go 'back' past the starting page
+				if($side == 0)
+				{
+          $("#back_button").attr("disabled", true);
+        }
+        else
+				{
+        	$("#back_button").attr("disabled", false);
+          $("#next_button").attr("disabled", false);
+          $("#solve_button").attr("disabled", true);
+        }
+				// --------------- Change the label to show new side
+        $("#label_text").text($labels[$side]);
+      }); // ---------------  end Back Button
+
+
+			// --------------- Clear Button
+      var $clear_button = $("#clear_button");
+			$clear_button.click(function() {
+				// --------------- Remove colors, change back to grey default
+				$('.grid p').css('background-color', "#d3d3d3");
+			}); // --------------- end Clear Button
+
+			// --------------- Next Button
+      var $next_button = $("#next_button");
+      $next_button.click(function() {
+				// --------------- If viewing Bottom (last side), update buttons
+      	if(($side+1) == 5)
+				{
+        	$("#solve_button").attr("disabled", false);
+          $next_button.attr("disabled", true);
+        }
+        else
+				{
+        	$("#solve_button").attr("disabled", true);
+        }
+
+        $("#back_button").attr("disabled", false);
+
+				// --------------- Get the colors currently on the squares
+        var $square0_color = $("#Square0").css("background-color");
+        var $square1_color = $("#Square1").css("background-color");
+        var $square2_color = $("#Square2").css("background-color");
+        var $square3_color = $("#Square3").css("background-color");
+        var $square4_color = $("#Square4").css("background-color");
+        var $square5_color = $("#Square5").css("background-color");
+        var $square6_color = $("#Square6").css("background-color");
+        var $square7_color = $("#Square7").css("background-color");
+        var $square8_color = $("#Square8").css("background-color");
+
+        var $i = 0;
+
+				// --------------- Insert the colors into the color_values array
+        $color_values[($i++)+($side*9)] = $square0_color;
+        $color_values[($i++)+($side*9)] = $square1_color;
+        $color_values[($i++)+($side*9)] = $square2_color;
+        $color_values[($i++)+($side*9)] = $square3_color;
+        $color_values[($i++)+($side*9)] = $square4_color;
+        $color_values[($i++)+($side*9)] = $square5_color;
+        $color_values[($i++)+($side*9)] = $square6_color;
+        $color_values[($i++)+($side*9)] = $square7_color;
+        $color_values[($i++)+($side*9)] = $square8_color;
+
+				// --------------- Increment side, "look at the next side"
+      	$side++;
+
+				// --------------- On the new side, start with a "greyed" slate
+	      $('.grid p').css('background-color', "#d3d3d3");
+				// --------------- Insert the new label
+      	$("#label_text").text($labels[$side]);
+
+      }); // --------------- end Next Button
+
+			// --------------- Solve Button
+      var $solve_button = $("#solve_button");
+			$solve_button.click(function() {
+
+      	var $square0_color = $("#Square0").css("background-color");
+      	var $square1_color = $("#Square1").css("background-color");
+      	var $square2_color = $("#Square2").css("background-color");
+      	var $square3_color = $("#Square3").css("background-color");
+      	var $square4_color = $("#Square4").css("background-color");
+      	var $square5_color = $("#Square5").css("background-color");
+      	var $square6_color = $("#Square6").css("background-color");
+      	var $square7_color = $("#Square7").css("background-color");
+      	var $square8_color = $("#Square8").css("background-color");
+
+      	var $side = 5;
+      	var $i = 0;
+
+				$color_values[($i++)+($side*9)] = $square0_color;
+      	$color_values[($i++)+($side*9)] = $square1_color;
+      	$color_values[($i++)+($side*9)] = $square2_color;
+      	$color_values[($i++)+($side*9)] = $square3_color;
+      	$color_values[($i++)+($side*9)] = $square4_color;
+      	$color_values[($i++)+($side*9)] = $square5_color;
+      	$color_values[($i++)+($side*9)] = $square6_color;
+      	$color_values[($i++)+($side*9)] = $square7_color;
+      	$color_values[($i++)+($side*9)] = $square8_color;
+      	var $message = "";
+
+				for(var $i = 0; $i < 54; $i++)
+				{
+      		$message += "Square "+$i+" is " + $color_values[$i] + ".\n";
+      	}
+      	console.log($message);
+
+    		//  TODO
+      	//  At this point, we have an array with values. I need to send
+      	//      those values to a java solve function. Next things next,
+      	//      it looks like I am going to have to port it to Java!!! :(
+			});
     });
     </script>
 	</body>

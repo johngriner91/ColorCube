@@ -5,15 +5,26 @@
 	font-variant: normal;
 	font-weight: 500;
 	line-height: 26.3999996185303px;
-    text-align:center;  
-    text-transform:uppercase; 
-    height:50px; 
+    text-align:center;
+    text-transform:uppercase;
+    height:50px;
+}
+
+.heading2 {
+	font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 26.3999996185303px;
+    text-align:center;
+    height:50px;
 }
 
 .grid {
     width: 350px;
     height: 350px;
-    border: 1px solid;
+    border: 1px solid black;
     margin: auto;
 }
 
@@ -21,10 +32,18 @@
     float:left;
     width: 30%;
     padding-bottom: 30%; /* = width for a 1:1 aspect ratio */
-    margin:1.66%;
+    margin:1.35%;
     background-color: #d3d3d3;
+		border: 1px solid black;
 }
 
-.clicked{
-    background-color: #F00;
+.buttons {
+	font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 26.3999996185303px;
+	text-align:center;
+	height:50px;
 }
