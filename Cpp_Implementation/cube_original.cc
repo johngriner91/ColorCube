@@ -86,14 +86,15 @@ void Cube::print(){
 //		methods in the correct order.
 void Cube::solve_cube(){
 	// print the cube first
-	this->print();
+	//this->print();
 	// make sure the cube is oriented so the cube can be solved with the same
 	//		algorithm each time.
 	this->orient();
 	// call the appropriate methods to solve the cube.
-	this->print();
+	//this->print();
 	this->whiteCross();
 	cout << "\nWhite Cross should be done\n";
+	this->print();
 	return;
 	this->print();
 	this->whiteCorners();
@@ -830,26 +831,27 @@ void Cube::whiteCross(){
 
 	//	This if statement checks to see if any of the white cross pieces are
 	//		already set.
-	if(	(this->at(37)=='w')||(this->at(39)=='w')|| (this->at(41)=='w')||
-		(this->at(43)=='w')){
+	if( (this->at(37)=='w') ||
+	    (this->at(39)=='w') || 
+	    (this->at(41)=='w') ||
+		  (this->at(43)=='w') ){
 
-		//	If the top "cross" piece is set.
+		//	If the top "cross" piece is white, align it.
 		if(this->at(37)=='w'){
-
-			// The following few lines check to see if that white piece is lined up
-			//	on the right color.
 			char temp = this->at(19);
 			if(this->at(22) != temp){
-				if(this->at(13) == temp)
+				if(this->at(13) == temp){
 					this->U();
-				else if(this->at(31) == temp)
+        } // end if
+				else if(this->at(31) == temp){
 					this->Ui();
-				else if(this->at(4) == temp){
+        } // end else if
+				else{
 					this->U();
 					this->U();
-				}
-			}
-		}
+				} // end else
+			} // end if(this->at(22) != temp
+		} // end if(this->at(37)=='w'
 
 		//	If the left "cross" piece is set.
 		else if(this->at(39)=='w'){
