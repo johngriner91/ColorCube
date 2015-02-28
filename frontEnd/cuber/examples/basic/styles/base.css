@@ -100,7 +100,7 @@ table, td, tr {
 @media not screen and (-webkit-transform-3d)
 {
 	#container{
-		visibility: hidden;
+		visibility: visible;
 	}
 	#fail{
 		display: block;

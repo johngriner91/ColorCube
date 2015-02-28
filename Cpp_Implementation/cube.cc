@@ -11,7 +11,7 @@
 |		be able to solve it too.
 |
 |
-|	How it works. 
+|	How it works.
 |
 +---------------------------------------------------------------------------
 */
@@ -20,23 +20,50 @@
 using namespace std;
 
 // Constructor: instantiates the Cube object with the cubeValues data
-Cube::Cube(char array[54]){
-	for(int i = 0; i < 54; i++)
+Cube::Cube( char array[54] ){
+	// Read in the colors of the cube.
+	for(int i = 0; i < 54; i++){
 		cubeValues[i] = array[i];
+	}
 }
+
+
+// This is the method that solves the Cube by calling the appropriate
+//		methods in the correct order.
+void Cube::solve_cube(){
+	this->print();
+	this->orient();
+	this->whiteCross();
+	this->print();
+	this->whiteCorners();
+
+	//	At this point, the white side of the cube is complete
+	this->orient();
+	this->middleLayer();
+
+	//	At this point, the middle layer is complete
+	this->yellowCross();
+	this->yellowCorners();
+
+	//	At this point, the yellow layer is complete
+	this->lLayer_corners();
+	this->lLayer_topEdges();
+
+	//	At this point, the cube is completed
+	this->print();
+	this->optimizeData();
+
+	//	The optimized solution is provided to the user
+	this->parseResult();
+}
+
 
 // This method prints out the cube faces in a grid format. Prints in the
 // following format.
-//		Side1:
-//		x x x
-//		x x x
-//		x x x
-//
-//		Side2:
-//		...
-//
 void Cube::print(){
 	cout << "Printing the cubeValues\n-----------------";
+
+	// Print the front facing cube faces
 	cout << "\n\nFront\n-------\n";
 	for(int i = 0; i < 9; i++){
 		if((i+1)%3 == 0)
@@ -44,6 +71,8 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
+
+	// Print out the right facing cube faces
 	cout << "\n\nRight\n-------\n";
 	for(int i = 9; i < 18; i++){
 		if((i+1)%3 == 0)
@@ -51,6 +80,8 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
+
+	// Print out the back facing cube faces
 	cout << "\n\nBack\n-------\n";
 	for(int i = 18; i < 27; i++){
 		if((i+1)%3 == 0)
@@ -58,6 +89,8 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
+
+	// Print out the left facing cube faces
 	cout << "\n\nLeft\n-------\n";
 	for(int i = 27; i < 36; i++){
 		if((i+1)%3 == 0)
@@ -65,6 +98,8 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
+
+	// Print out the top facing cube faces
 	cout << "\n\nTop\n-------\n";
 	for(int i = 36; i < 45; i++){
 		if((i+1)%3 == 0)
@@ -72,6 +107,8 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
+
+	// Print out the bottom facing cube faces
 	cout << "\n\nBottom\n-------\n";
 	for(int i = 45; i < 54; i++){
 		if((i+1)%3 == 0)
@@ -82,32 +119,6 @@ void Cube::print(){
 	cout << "\n\nCompleted printing\n-----------------\n\n";
 }
 
-// This is the method that solves the Cube by calling the appropriate
-//		methods in the correct order.
-void Cube::solve_cube(){
-	// print the cube first
-	//this->print();
-	// make sure the cube is oriented so the cube can be solved with the same
-	//		algorithm each time.
-	this->orient();
-	// call the appropriate methods to solve the cube.
-	//this->print();
-	this->whiteCross();
-	cout << "\nWhite Cross should be done\n";
-	this->print();
-	return;
-	this->print();
-	this->whiteCorners();
-	this->orient();
-	this->middleLayer();
-	this->yellowCross();
-	this->yellowCorners();
-	this->lLayer_corners();
-	this->lLayer_topEdges();
-	this->print();
-	this->optimizeData();
-	this->parseResult();
-}
 
 // Face turn method. This method changed the values of the cubeValues array
 //		to simulate a 90 degree clockwise rotation of the front-side face.
@@ -828,13 +839,13 @@ void Cube::whiteCross(){
 	int edges[24] = {	 1,  3,  5,  7, 10, 12, 14, 16,
 										19, 21, 23, 25, 28, 30, 32, 34,
 										37, 39, 41, 43, 46, 48, 50, 52};
-										
+
 	bool top_fixed = false;
 
 	//	This if statement checks to see if any of the white cross pieces are
 	//		already set.
 	if( (this->at(37)=='w') ||
-	    (this->at(39)=='w') || 
+	    (this->at(39)=='w') ||
 	    (this->at(41)=='w') ||
 		  (this->at(43)=='w') ){
 
