@@ -11,7 +11,7 @@
 |		be able to solve it too.
 |
 |
-|	This is the header file. It defines the cube class that will be used to 
+|	This is the header file. It defines the cube class that will be used to
 |   implement the digital rubik's cube.
 +---------------------------------------------------------------------------
 */
@@ -36,7 +36,6 @@ class Cube{
 		char getLColor();			//	Returns the center color of the left face
 		char getUColor();			//	Returns the center color of the top face
 		char getDColor();			//	Returns the center color of the bottom face
-		int edgeOf(int);			// 	Returns color of the opposite edge of index a
 		void parseResult();		//	interprets the found solution
 		void optimizeData();	//	edits the solution method
 
@@ -46,13 +45,13 @@ class Cube{
 		//		Cube, as per the Official Rubik's Cube Solution Guide.
 
 		void orient();                   //	positions the cube white up, blue front
-		void whiteCross();   	         	 //	solves the 'white cross' step
-		void whiteCorners();	           //	solves the 'white corners' step
-		
+		int whiteCross();   	         	 //	solves the 'white cross' step
+		int whiteCorners();	           //	solves the 'white corners' step
+
 		//  Eventually, the following two methods will be replaced
 		void correctSix(int&);		       //	solves the white corner from position 6
 		void correctEight(int&);		     //	solves the white corner from position 8
-		
+
 		void printE(std::string);        //	print function with error alerts
 		void middle_fallLeft();	         //	middle layer solving
 		void middle_fallRight();		     //	middle layer solving

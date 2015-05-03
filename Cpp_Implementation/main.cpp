@@ -12,7 +12,7 @@
 |
 |
 |	This is the main file. Because we are currently in development, we are
-|   assuming correct input and are doing not checking. This file reads in 
+|   assuming correct input and are doing not checking. This file reads in
 |   the colors of a rubik's cube and calls the Cube::solve() function, which
 |   will itself call a few functions that will solve the cube.
 |
@@ -21,27 +21,27 @@
 #include "cube.h"
 #include "cube.cc"
 
+#include <__debug>
+
 int main(){
 
 	//	Variables
-	char cube[54];					//	array to store the cube colors
-	ifstream inputFile;			//	input file that holds the faces
-
-	inputFile.open("cubeStart.txt");
+	char cube_faces[54];
+	ifstream inputFile;
 
 	// Right now, there isn't any file checking. Because it's in the
 	//	beginning stages, I know the input file will be in a correct
 	//	format.
+	inputFile.open("cubeStart.txt");
+
 	for(int j = 0; j < 54; j++){
-		inputFile >> cube[j];
+		inputFile >> cube_faces[j];
 	}
 
-	//	The program is done reading the input file. We will go ahead
-	//		and close the file.
 	inputFile.close();
 
 	//	Create a cube object
-	Cube puzzle(cube);
+	Cube puzzle(cube_faces);
 
 	//	Calle the method that will solve the cube.
 	puzzle.solve_cube();

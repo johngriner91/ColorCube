@@ -17,7 +17,22 @@
 */
 
 #include <iostream>
+#include <iomanip>
+
+// Helpful for debugging and / or logging
+#define LOG( message ) logError( __LINE__,__func__, message )
+
+// Functions return pass when things work out well, fail otherwise
+const int FAIL = 0;
+const int PASS = 1;
+
 using namespace std;
+
+void logError (int lineNumber, string function, const std::string& message)
+{
+    cout << "line: " << setw(4) << lineNumber << " : ";
+		cout << function << ": " <<  message << "\n";
+}
 
 // Constructor: instantiates the Cube object with the cubeValues data
 Cube::Cube( char array[54] ){
@@ -33,9 +48,16 @@ Cube::Cube( char array[54] ){
 void Cube::solve_cube(){
 	this->print();
 	this->orient();
-	this->whiteCross();
-	this->print();
-	this->whiteCorners();
+
+	if ( FAIL == this->whiteCross() ){
+		printE("Terminating from whiteCross()");
+		return;
+	}
+
+	if ( FAIL == this->whiteCorners() ){
+		printE("Terminating from whiteCorners()");
+		return;
+	}
 
 	//	At this point, the white side of the cube is complete
 	this->orient();
@@ -677,87 +699,6 @@ char Cube::at(int a){
 	return cubeValues[a];
 }
 
-//	Switch statement. This returns the opposite side of an edge piece. This is
-//		used in part to "look around the cube" computationally.
-int Cube::edgeOf(int a){
-	switch(a){
-		case 1:
-			return 43;
-			break;
-		case 3:
-			return 32;
-			break;
-		case 5:
-			return 12;
-			break;
-		case 7:
-			return 46;
-			break;
-		case 10:
-			return 41;
-			break;
-		case 12:
-			return 5;
-			break;
-		case 14:
-			return 21;
-			break;
-		case 16:
-			return 50;
-			break;
-		case 19:
-			return 37;
-			break;
-		case 21:
-			return 14;
-			break;
-		case 23:
-			return 30;
-			break;
-		case 25:
-			return 52;
-			break;
-		case 28:
-			return 39;
-			break;
-		case 30:
-			return 23;
-			break;
-		case 32:
-			return 3;
-			break;
-		case 34:
-			return 48;
-			break;
-		case 37:
-			return 19;
-			break;
-		case 39:
-			return 28;
-			break;
-		case 41:
-			return 10;
-			break;
-		case 43:
-			return 1;
-			break;
-		case 46:
-			return 7;
-			break;
-		case 48:
-			return 34;
-			break;
-		case 50:
-			return 16;
-			break;
-		case 52:
-			return 25;
-			break;
-		default:
-			return -1;
-			break;
-	}
-}
 
 //	By orienting the cube, the algorithm to solve the cube can be standardized.
 void Cube::orient(){
@@ -832,427 +773,450 @@ void Cube::orient(){
 
 }	// End of Cube::orient()
 
+// Think about the white cross step
+int Cube::whiteCross(){
+  LOG("Beginning function");
 
-void Cube::whiteCross(){
+  int edges[24] = {	 1,  3,  5,  7, 	// front
+										10, 12, 14, 16, 	// right
+										19, 21, 23, 25, 	// back
+										28, 30, 32, 34,		// left
+										37, 39, 41, 43, 	// up
+										46, 48, 50, 52	};// down
+  int counter = 0;
+  int numTurns = 0;
+  bool startOver = true;
 
-	// This array keeps track of the indexes of "edge" pieces.
-	int edges[24] = {	 1,  3,  5,  7, 10, 12, 14, 16,
-										19, 21, 23, 25, 28, 30, 32, 34,
-										37, 39, 41, 43, 46, 48, 50, 52};
+  // Until we've looked at and approved all the pieces, keep looking
+  while (counter != 24){
 
-	bool top_fixed = false;
+    // We haven't found a white piece yet
+    while(this->at(edges[counter]) != 'w'){
+      counter++;
+    }
 
-	//	This if statement checks to see if any of the white cross pieces are
-	//		already set.
-	if( (this->at(37)=='w') ||
-	    (this->at(39)=='w') ||
-	    (this->at(41)=='w') ||
-		  (this->at(43)=='w') ){
+    // Integrate cube turns to "repeat" the position-based algorithm.
+		//	This way, case 0 can be used to handle positions 1, 10, 19, and 28
+		//	without any code rewrite. We'll simply turn the cube until those
+		//	positions "become" case 0.
+    if (counter < 16){
+      int numToTurn = counter / 4;
 
-		//	If the top "cross" piece is white, align it.
-		if((this->at(37)=='w') && (false == top_fixed)){
-			char temp = this->at(19);
-			if(this->at(22) != temp){
-				if(this->at(13) == temp){
-					this->U();
-        } // end if
-				else if(this->at(31) == temp){
-					this->Ui();
-        } // end else if
-				else{
-					this->U();
-					this->U();
-				} // end else
-			} // end if(this->at(22) != temp)
-			top_fixed = true;
-		} // end if(this->at(37)=='w')
+      // reset the counter
+      counter = counter % 4;
 
-		//	If the left "cross" piece is set.
-		else if((this->at(39)=='w') && (false == top_fixed)){
-			char temp = this->at(28);
-			if(this->at(31) != temp){
-				if(this->at(22) == temp)
-					this->U();
-				else if(this->at(4) == temp)
-					this->Ui();
-				else if(this->at(13) == temp){
-					this->U();
-					this->U();
-				}
-			}
-			top_fixed = true;
-		}
+      for(int i = 0; i < numToTurn; i++)
+        this->TurnCube();
 
-		// If the right "cross" piece is set.
-		else if(this->at(41)=='w'){
-			char temp = this->at(10);
+    } // end if (counter < 16)
 
-			// The following few lines check to see if that white piece is lined up
-			//	on the right color.
-			if((this->at(13) != temp) && (false == top_fixed)){
-				if(this->at(4) == temp)
-					this->U();
-				else if(this->at(22) == temp)
-					this->Ui();
-				else if(this->at(31) == temp){
-					this->U();
-					this->U();
-				}
-			}
-			top_fixed = true;
-		}
+    // This switch is the meat and potatos of the function. Depending on
+		//	where the white cross pieces are, we need to make specific turns to
+		// 	move them into their correct position. This case statements are the
+		//	different possible positions of the white pieces.
+    switch(counter){
+      case 0:{
+        char oppositeEdge = this->at(43);
+        if(oppositeEdge == this->getFColor()){
+          this->Fi();
+          this->U();
+          this->Li();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->F();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->F();
+          this->F();
+          this->Di();
+          this->Di();
+          this->B();
+          this->U();
+          this->L();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Fi();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 0: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 1:{
+        char oppositeEdge = this->at(32);
+        if(oppositeEdge == this->getFColor()){
+          this->U();
+          this->Li();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->L();
+          this->Di();
+          this->Di();
+          this->Li();
+          this->R();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->L();
+          this->Di();
+          this->Li();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->L();
+        }
+        else{
+          printE("whiteCross(): case 1: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 2:{
+        char oppositeEdge = this->at(12);
+        if(oppositeEdge == this->getFColor()){
+          this->F();
+          this->F();
+          this->U();
+          this->Li();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->Ri();
+          this->D();
+          this->R();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Ri();
+          this->Di();
+          this->Di();
+          this->R();
+          this->Li();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 2: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 3:{
+        char oppositeEdge = this->at(46);
+        if(oppositeEdge == this->getFColor()){
+          this->F();
+          this->U();
+          this->Li();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->D();
+          this->R();
+          this->U();
+          this->F();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->Di();
+          this->Di();
+          this->B();
+          this->U();
+          this->Ri();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Di();
+          this->L();
+          this->U();
+          this->Bi();
+          this->Ui();
+        }
+        else{
+          printE("whiteCross(): case 3: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 16:{
+        char oppositeEdge = this->at(19);
+        if(oppositeEdge == this->getFColor()){
+          this->Bi();
+          this->Bi();
+          this->Di();
+          this->Di();
+          this->F();
+          this->F();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->Bi();
+          this->Ui();
+          this->B();
+          this->U();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          // This piece is supposed to be white.
+          startOver = false;
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->B();
+          this->U();
+          this->Bi();
+          this->Ui();
+        }
+        else{
+          printE("whiteCross(): case 16: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 17:{
+        char oppositeEdge = this->at(29);
+        if(oppositeEdge == this->getFColor()){
+          this->L();
+          this->U();
+          this->Li();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->Li();
+          this->Li();
+          this->Di();
+          this->Di();
+          this->R();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->Li();
+          this->Ui();
+          this->L();
+          this->U();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          // This piece is supposed to be white.
+          startOver = false;
+        }
+        else{
+          printE("whiteCross(): case 17: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 18:{
+        char oppositeEdge = this->at(10);
+        if(oppositeEdge == this->getFColor()){
+          this->Ri();
+          this->Ui();
+          this->R();
+          this->U();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          // This piece is supposed to be white.
+          startOver = false;
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->R();
+          this->U();
+          this->Ri();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->R();
+          this->R();
+          this->Di();
+          this->Di();
+          this->Li();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 18: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 19:{
+        char oppositeEdge = this->at(1);
+        if(oppositeEdge == this->getFColor()){
+          // This piece is supposed to be white.
+          startOver = false;
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->F();
+          this->U();
+          this->Fi();
+          this->Ui();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->F();
+          this->F();
+          this->Di();
+          this->Di();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Fi();
+          this->Ui();
+          this->F();
+          this->U();
+        }
+        else{
+          printE("whiteCross(): case 19: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 20:{
+        char oppositeEdge = this->at(7);
+        if(oppositeEdge == this->getFColor()){
+          this->F();
+          this->F();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->D();
+          this->R();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->Di();
+          this->Di();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Di();
+          this->Li();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 20: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 21:{
+        char oppositeEdge = this->at(34);
+        if(oppositeEdge == this->getFColor()){
+          this->D();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->Di();
+          this->Di();
+          this->R();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->Di();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Li();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 21: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 22:{
+        char oppositeEdge = this->at(16);
+        if(oppositeEdge == this->getFColor()){
+          this->Di();
+          this->F();
+          this->F();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->R();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->D();
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->Di();
+          this->Di();
+          this->Li();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 22: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+      case 23:{
+        char oppositeEdge = this->at(25);
+        if(oppositeEdge == this->getFColor()){
+          this->Di();
+          this->Di();
+          this->F();
+          this->F();
+        }
+        else if(oppositeEdge == this->getRColor()){
+          this->Di();
+          this->R();
+          this->R();
+        }
+        else if(oppositeEdge == this->getBColor()){
+          this->Bi();
+          this->Bi();
+        }
+        else if(oppositeEdge == this->getLColor()){
+          this->D();
+          this->Li();
+          this->Li();
+        }
+        else{
+          printE("whiteCross(): case 23: found no match for opposite edge");
+          return 0;
+        }
+				break;
+      }
+    } // end switch statement. The piece was handled at this point.
 
-		//	If the bottom "cross" piece is set.
-		else if((this->at(43)=='w') && (false == top_fixed)){
-			char temp = this->at(2);
 
-			// The following few lines check to see if that white piece is lined up
-			//	on the right color.
-			if(this->at(4) != temp){
-				if(this->at(31) == temp)
-					this->U();
-				else if(this->at(13) == temp)
-					this->Ui();
-				else if(this->at(22) == temp){
-					this->U();
-					this->U();
-				}
-			}
-			top_fixed = true;
-		}
-	}
+    // Was the piece that was found supposed to be there? If not, start
+		// 	search over, because we may have accidentally moved some pieces out
+		//	of place. I doubt it, but it's always better to double check.
+    if (startOver) {
+			std:string msg = "Fixed white piece at " + to_string(edges[counter]);
+      LOG(msg);
 
-	// Moving on....
+      counter = 0;
 
-	//	The algorithm for the following lines is to move the white piece to either
-	//		position 6 or 8. By doing this, we can standardize the solution. I don't
-	//		this is an optimal solution. .... work for later.
-
-	int cross_index = 0;
-	while(cross_index < 24){
-		if(this->at(edges[cross_index]) != 'w'){
-			cross_index++;
-		}
+      // reset the flag
+      startOver = true;
+    }
 		else{
-			bool topOne = false;
-			switch(cross_index){
-				case 0:
-					this->F();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 1:
-					this->Fi();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 2:
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 3:
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 4:
-					this->TurnCube();
-					this->F();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 5:
-					this->TurnCube();
-					this->Fi();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 6:
-					this->TurnCube();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 7:
-					this->TurnCube();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 8:
-					this->TurnCube();
-					this->TurnCube();
-					this->F();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 9:
-					this->TurnCube();
-					this->TurnCube();
-					this->Fi();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 10:
-					this->TurnCube();
-					this->TurnCube();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 11:
-					this->TurnCube();
-					this->TurnCube();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 12:
-					this->TurnCube();
-					this->TurnCube();
-					this->TurnCube();
-					this->F();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 13:
-					this->TurnCube();
-					this->TurnCube();
-					this->TurnCube();
-					this->Fi();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 14:
-					this->TurnCube();
-					this->TurnCube();
-					this->TurnCube();
-					this->F();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 15:
-					this->TurnCube();
-					this->TurnCube();
-					this->TurnCube();
-					while(this->at(4) != (this->at(this->edgeOf(7)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->U();
-					this->Li();
-					this->Ui();
-					break;
-				case 16:
-					if(this->at(19) == this->at(22)){
-						cross_index++;
-						topOne = true;
-					}
-					else{
-						this->TurnCube();
-						this->TurnCube();
-						this->F();
-						this->F();
-						while(this->at(4) != (this->at(this->edgeOf(46)))){
-							this->D();
-							this->TurnCube();
-						}
-						this->F();
-						this->F();
-					}
-					break;
-				case 17:
-					if(this->at(28) == this->at(31)){
-						cross_index++;
-						topOne = true;
-					}
-					else{
-						this->TurnCube();
-						this->TurnCube();
-						this->TurnCube();
-						this->F();
-						this->F();
-						while(this->at(4) != (this->at(this->edgeOf(46)))){
-							this->D();
-							this->TurnCube();
-						}
-						this->F();
-						this->F();
-					}
-					break;
-				case 18:
-					if(this->at(10) == this->at(13)){
-						cross_index++;
-						topOne = true;
-					}
-					else{
-						this->TurnCube();
-						this->F();
-						this->F();
-						while(this->at(4) != (this->at(this->edgeOf(46)))){
-							this->D();
-							this->TurnCube();
-						}
-						this->F();
-						this->F();
-					}
-					break;
-				case 19:
-					if(this->at(1) == this->at(4)){
-						cross_index++;
-						topOne = true;
-					}
-					else{
-						this->F();
-						this->F();
-						while(this->at(4) != (this->at(this->edgeOf(46)))){
-							this->D();
-							this->TurnCube();
-						}
-						this->F();
-						this->F();
-					}
-					break;
-				case 20:
-					while(this->at(4) != (this->at(this->edgeOf(46)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->F();
-					break;
-				case 21:
-					this->TurnCube();
-					this->TurnCube();
-					this->TurnCube();
-					while(this->at(4) != (this->at(this->edgeOf(46)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->F();
-					break;
-				case 22:
-					this->TurnCube();
-					while(this->at(4) != (this->at(this->edgeOf(46)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->F();
-					break;
-				case 23:
-					this->TurnCube();
-					this->TurnCube();
-					while(this->at(4) != (this->at(this->edgeOf(46)))){
-						this->D();
-						this->TurnCube();
-					}
-					this->F();
-					this->F();
-					break;
-				default:
-					cout << "ERROR!!!";
-					break;
-			} // end switch statement
-			if(!topOne)
-				cross_index = 0;
+			// Move on, this is supposed to be white
+			counter++;
 		}
-	}
-	instruction.push_back("WhiteCross");
+
+    numTurns++;
+    if (numTurns > 10){
+      printE("Over 10 turns for WhiteCross(). Must debug before moving on");
+      return 0;
+    }
+  }
+
+  // The function will terminate. No errors were found! :)
+  LOG("Returning sucessfully\n");
+  return PASS;
 }
 
 //	Return the index of the center of the front face
@@ -1285,8 +1249,7 @@ char Cube::getDColor(){
 	return cubeValues[49];
 }
 
-
-void Cube::correctSix(int &cornerIndex){
+void Cube::correctSix(int &counter){
 	bool found = false;
 	int i = 0;
 	while((!found) & (i < 6)){
@@ -1301,16 +1264,16 @@ void Cube::correctSix(int &cornerIndex){
 		}
 	}
 	if(i == 6){
-		this->printE("Error @ correctSix(cornerIndex)");
+		this->printE("Error @ correctSix(counter)");
 	}
 	this->D();
 	this->L();
 	this->Di();
 	this->Li();
-	cornerIndex = 0;
+	counter = 0;
 }
 
-void Cube::correctEight(int &cornerIndex){
+void Cube::correctEight(int &counter){
 	bool found = false;
 	int i = 0;
 	while((!found) & (i < 6)){
@@ -1325,81 +1288,460 @@ void Cube::correctEight(int &cornerIndex){
 		}
 	}
 	if(i == 6){
-		this->printE("Error @ correctEight(cornerIndex).\nThe searched piece configuration does not seem to exist.\nPlease check work.");
+		this->printE("Error @ correctEight(counter).\nThe searched piece configuration does not seem to exist.\nPlease check work.");
 	}
 	this->Di();
 	this->Ri();
 	this->D();
 	this->R();
-	cornerIndex = 0;
+	counter = 0;
 }
 
-void Cube::whiteCorners(){
-	int corner[24] ={ 	0,  2,  6,  8,
-		 				9, 11, 15, 17,
-						18, 20, 24, 26,
-						27, 29, 33, 35,
-						36, 38, 42, 44,
-						45, 47, 51, 53 };
+int Cube::whiteCorners(){
 
-	int cornerIndex = 0;
-	while(cornerIndex < 24){
-		//cout << "CornerIndex is " << cornerIndex << ".\n";
-		if(this->at(corner[cornerIndex]) != 'w'){
-			cornerIndex++;
+	this->print();
+
+	int corners[24] ={ 	 0,  2,  6,  8,		// front
+		 									 9, 11, 15, 17,		// right
+											18, 20, 24, 26,		// back
+											27, 29, 33, 35,		// left
+											36, 38, 42, 44,		// top
+											45, 47, 51, 53 };	// bottom
+
+	int counter = 0;
+	while(counter < 24){
+		//cout << "counter is " << counter << ".\n";
+		if(this->at(corners[counter]) != 'w'){
+			counter++;
 		}
-		else if((16 <= cornerIndex) & (cornerIndex <= 19)){
-			if(cornerIndex == 16){
+
+		// Integrate cube turns to "repeat" the position-based algorithm.
+		//	This way, case 0 can be used to handle positions 1, 10, 19, and 28
+		//	without any code rewrite. We'll simply turn the cube until those
+		//	positions "become" case 0.
+    if (counter < 16){
+      int numToTurn = counter / 4;
+
+      // reset the counter
+      counter = counter % 4;
+
+      for(int i = 0; i < numToTurn; i++)
+        this->TurnCube();
+
+    } // end if (counter < 16)
+
+		switch(counter){
+			case 0:{
+				char oppositeEdge1 = this->at(42);
+				char oppositeEdge2 = this->at(29);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 1:{
+				char oppositeEdge1 = this->at(44);
+				char oppositeEdge2 = this->at(9);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						this->Ri();
+						this->D();
+						this->R();
+						this->Di();
+						this->Ri();
+						this->D();
+						this->R();
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+			}
+			case 2:{
+				char oppositeEdge1 = this->at(45);
+				char oppositeEdge2 = this->at(35);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 3:{
+				char oppositeEdge1 = this->at(47);
+				char oppositeEdge2 = this->at(15);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 16:{
+				char oppositeEdge1 = this->at(20);
+				char oppositeEdge2 = this->at(27);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 17:{
+				char oppositeEdge1 = this->at(18);
+				char oppositeEdge2 = this->at(11);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 18:{
+				char oppositeEdge1 = this->at(0);
+				char oppositeEdge2 = this->at(30);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 19:{
+				char oppositeEdge1 = this->at(2);
+				char oppositeEdge2 = this->at(9);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 20:{
+				char oppositeEdge1 = this->at(6);
+				char oppositeEdge2 = this->at(35);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 21:{
+				char oppositeEdge1 = this->at(8);
+				char oppositeEdge2 = this->at(15);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 22:{
+				char oppositeEdge1 = this->at(26);
+				char oppositeEdge2 = this->at(33);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			case 23:{
+				char oppositeEdge1 = this->at(24);
+				char oppositeEdge2 = this->at(17);
+
+				if ((oppositeEdge1 == this->getFColor() ) ||
+						(oppositeEdge2 == this->getFColor() ) ) {
+					if(oppositeEdge1 == this->getRColor() ) {
+						LOG("Implement oppositeEdge1 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getRColor() ){
+						LOG("Implement oppositeEdge2 == this->getRColor()");
+						return 0;
+					}
+					else if (oppositeEdge1 == this->getLColor() ){
+						LOG("Implement oppositeEdge1 == this->getLColor()");
+						return 0;
+					}
+					else if (oppositeEdge2 == this->getLColor() ){
+						LOG("Implement oppositeEdge2 == this->getLColor()");
+						return 0;
+					}
+					else{
+						LOG("Could not find match");
+						return 0;
+					}
+				}
+				break;
+			}
+			default: {
+				LOG("Could not find match");
+				return 0;
+			}
+		} // end switch statement
+
+		/*
+		if((16 <= counter) & (counter <= 19)){
+			if(counter == 16){
 				if((this->at(27) == this->getLColor()) &
 					(this->at(20) == this->getBColor()))
-					cornerIndex++;
+					counter++;
 				else{
 					this->Li();
 					this->Di();
 					this->Di();
 					this->L();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 				}
 			}
-			else if(cornerIndex == 17){
+			else if(counter == 17){
 				if((this->at(11) == this->getRColor()) &
 					(this->at(18) == this->getBColor()))
-					cornerIndex++;
+					counter++;
 				else{
 					this->R();
 					this->Di();
 					this->Di();
 					this->Ri();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 				}
 			}
-			else if(cornerIndex == 18){
+			else if(counter == 18){
 				if((this->at(0) == this->getFColor()) &
 					(this->at(29) == this->getLColor()))
-					cornerIndex++;
+					counter++;
 				else{
 					this->L();
 					this->D();
 					this->Li();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 				}
 			}
-			else if(cornerIndex == 19){
+			else if(counter == 19){
 				if((this->at(2) == this->getFColor()) &
 					(this->at(9) == this->getRColor()))
-					cornerIndex++;
+					counter++;
 				else{
 					this->Ri();
 					this->Di();
 					this->R();
 					this->D();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 				}
 			}
 		}
 		else{
-			switch(cornerIndex){
+			switch(counter){
 				case 0:
 					this->Fi();
 					this->D();
@@ -1407,26 +1749,26 @@ void Cube::whiteCorners(){
 					this->F();
 					this->Di();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 1:
 					this->F();
 					this->D();
 					this->Fi();
 					this->Di();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 2:
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 3:
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 4:
 					this->Ri();
 					this->Di();
 					this->R();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 5:
 					this->R();
@@ -1434,39 +1776,39 @@ void Cube::whiteCorners(){
 					this->Di();
 					this->Ri();
 					this->D();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 6:
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 7:
 					this->Di();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 8:
 					this->Bi();
 					this->Di();
 					this->B();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 9:
 					this->B();
 					this->D();
 					this->Bi();
 					this->D();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 10:
 					this->Di();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 11:
 					this->Di();
 					this->Di();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 12:
 					this->Li();
@@ -1474,21 +1816,21 @@ void Cube::whiteCorners(){
 					this->D();
 					this->L();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 13:
 					this->L();
 					this->D();
 					this->Li();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 14:
 					this->D();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 15:
 					this->D();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 20:
 					this->Li();
@@ -1499,7 +1841,7 @@ void Cube::whiteCorners(){
 					this->L();
 					this->Di();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 21:
 					this->R();
@@ -1510,7 +1852,7 @@ void Cube::whiteCorners(){
 					this->Ri();
 					this->Di();
 					this->Di();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				case 22:
 					this->D();
@@ -1522,7 +1864,7 @@ void Cube::whiteCorners(){
 					this->L();
 					this->Di();
 					this->Di();
-					this->correctSix(cornerIndex);
+					this->correctSix(counter);
 					break;
 				case 23:
 					this->Di();
@@ -1534,15 +1876,16 @@ void Cube::whiteCorners(){
 					this->Ri();
 					this->D();
 					this->D();
-					this->correctEight(cornerIndex);
+					this->correctEight(counter);
 					break;
 				default:
 					cout << "Hit default case in whiteCorners().\n";
 					break;
 			}
-		}
+		} */
 	}
 	instruction.push_back("WhiteCorners");
+	return 1;
 }
 
 void Cube::middle_fallLeft(){
@@ -1718,6 +2061,7 @@ void Cube::middleLayer(){
 		}
 
 void Cube::yellowCross(){
+	LOG("Beginning function");
 	bool completed = false;
 	while(!completed){
 		if((this->at(37) == 'y') & (this->at(39) == 'y') &
@@ -1765,6 +2109,7 @@ void Cube::yellowCross(){
 }
 
 void Cube::yellowCrossSequence(){
+	LOG("Beginning Function");
 	this->R();
 	this->U();
 	this->Ri();
@@ -1773,6 +2118,7 @@ void Cube::yellowCrossSequence(){
 	this->U();
 	this->U();
 	this->Ri();
+
 }
 
 void Cube::yellowCorners(){
