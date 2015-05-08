@@ -1309,6 +1309,9 @@ int Cube::whiteCorners(){
 											45, 47, 51, 53 };	// bottom
 
 	int counter = 0;
+  int numTurns = 0;
+  bool startOver = true;
+
 	while(counter < 24){
 		//cout << "counter is " << counter << ".\n";
 		if(this->at(corners[counter]) != 'w'){
@@ -1316,7 +1319,7 @@ int Cube::whiteCorners(){
 		}
 
 		// Integrate cube turns to "repeat" the position-based algorithm.
-		//	This way, case 0 can be used to handle positions 1, 10, 19, and 28
+		//	This way, case 0 can be used to handle positions 0, 9, 18, and 27
 		//	without any code rewrite. We'll simply turn the cube until those
 		//	positions "become" case 0.
     if (counter < 16){
@@ -1334,558 +1337,522 @@ int Cube::whiteCorners(){
 			case 0:{
 				char oppositeEdge1 = this->at(42);
 				char oppositeEdge2 = this->at(29);
-
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+				if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+                   this->Fi();
+                   this->Di();
+                   this->F();
+                   this->F();
+                   this->Di();
+                   this->Di();
+                   this->Fi();
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+                   this->Fi();
+                   this->Di();
+                   this->R();
+                   this->Di();
+                   this->Ri();
+                   this->F();
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+                   this->Fi();
+                   this->B();
+                   this->Di();
+                   this->Bi();
+                   this->F();
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+                   this->L();
+                   this->Di();
+                   this->Li();
+                   this->D();
+                   this->L();
+                   this->Di();
+                   this->Li();
+        }
+        LOG("Fixed white corner in case 0");
+        break;
+      }
 			case 1:{
 				char oppositeEdge1 = this->at(44);
 				char oppositeEdge2 = this->at(9);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						this->Ri();
-						this->D();
-						this->R();
-						this->Di();
-						this->Ri();
-						this->D();
-						this->R();
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+                   this->Ri();
+                   this->D();
+                   this->R();
+                   this->Di();
+                   this->Ri();
+                   this->D();
+                   this->R();
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+                   this->F();
+                   this->Bi();
+                   this->D();
+                   this->Fi();
+                   this->B();
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+                   this->F();
+                   this->D();
+                   this->Fi();
+                   this->Li();
+                   this->D();
+                   this->L();
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+                   this->F();
+                   this->Di();
+                   this->Di();
+                   this->Fi();
+                   this->Fi();
+                   this->D();
+                   this->F();
+        }
+        LOG("Fixed white corner in case 1");
+        break;
+      }
 			case 2:{
 				char oppositeEdge1 = this->at(45);
 				char oppositeEdge2 = this->at(35);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+                   this->D();
+                   this->Ri();
+                   this->Di();
+                   this->R();
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+                   this->Di();
+                   this->R();
+                   this->Di();
+                   this->Ri();
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+                   this->B();
+                   this->Di();
+                   this->Bi();
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+                   this->D();
+                   this->L();
+                   this->Di();
+                   this->Li();
+        }
+        LOG("Fixed white corner in case 2");
+        break;
+      }
 			case 3:{
 				char oppositeEdge1 = this->at(47);
 				char oppositeEdge2 = this->at(15);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+                   this->Di();
+                   this->Ri();
+                   this->D();
+                   this->R();
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+                   this->Bi();
+                   this->D();
+                   this->B();
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+                   this->Li();
+                   this->Di();
+                   this->Di();
+                   this->L();
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+                   this->Di();
+                   this->L();
+                   this->D();
+                   this->Li();
+        }
+        LOG("Fixed white corner in case 3");
+        break;
+      }
 			case 16:{
 				char oppositeEdge1 = this->at(20);
 				char oppositeEdge2 = this->at(27);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+          // This one is supposed to be white, and the colors match
+          startOver = false;
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+        }
+        LOG("Fixed white corner in case 16");
+        break;
+      }
 			case 17:{
 				char oppositeEdge1 = this->at(18);
 				char oppositeEdge2 = this->at(11);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+
+          // This one is supposed to be white, and the colors match
+          startOver = false;
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+        }
+        LOG("Fixed white corner in case 17");
+        break;
+      }
 			case 18:{
 				char oppositeEdge1 = this->at(0);
 				char oppositeEdge2 = this->at(30);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+          // This one is supposed to be white, and the colors match
+          startOver = false;
+        }
+        LOG("Fixed white corner in case 18");
+        break;
+      }
 			case 19:{
 				char oppositeEdge1 = this->at(2);
 				char oppositeEdge2 = this->at(9);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+
+          // This one is supposed to be white, and the colors match
+          startOver = false;
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+        }
+        LOG("Fixed white corner in case 19");
+        break;
+      }
 			case 20:{
 				char oppositeEdge1 = this->at(6);
 				char oppositeEdge2 = this->at(35);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+                   this->Di();
+                   this->Di();
+                   this->Bi();
+                   this->D();
+                   this->B();
+                   this->Di();
+                   this->R();
+                   this->Di();
+                   this->Ri();
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+        }
+        LOG("Fixed white corner in case 20");
+        break;
+      }
 			case 21:{
 				char oppositeEdge1 = this->at(8);
 				char oppositeEdge2 = this->at(15);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+                   this->D();
+                   this->Bi();
+                   this->Di();
+                   this->Di();
+                   this->B();
+                   this->D();
+                   this->Bi();
+                   this->Di();
+                   this->B();
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+                   this->Di();
+                   this->B();
+                   this->Di();
+                   this->Bi();
+                   this->Li();
+                   this->Di();
+                   this->L();
+                   this->Di();
+                   this->Di();
+                   this->B();
+                   this->Di();
+                   this->Bi();
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+                   this->Di();
+                   this->Fi();
+                   this->D();
+                   this->F();
+                   this->L();
+                   this->Di();
+                   this->Di();
+                   this->Li();
+        }
+        LOG("Fixed white corner in case 21");
+        break;
+      }
 			case 22:{
 				char oppositeEdge1 = this->at(26);
 				char oppositeEdge2 = this->at(33);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+                   this->Di();
+                   this->Di();
+                   this->Ri();
+                   this->Di();
+                   this->Di();
+                   this->R();
+                   this->D();
+                   this->Ri();
+                   this->Di();
+                   this->R();
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+        }
+        LOG("Fixed white corner in case 22");
+        break;
+      }
 			case 23:{
 				char oppositeEdge1 = this->at(24);
 				char oppositeEdge2 = this->at(17);
 
-				if ((oppositeEdge1 == this->getFColor() ) ||
-						(oppositeEdge2 == this->getFColor() ) ) {
-					if(oppositeEdge1 == this->getRColor() ) {
-						LOG("Implement oppositeEdge1 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getRColor() ){
-						LOG("Implement oppositeEdge2 == this->getRColor()");
-						return 0;
-					}
-					else if (oppositeEdge1 == this->getLColor() ){
-						LOG("Implement oppositeEdge1 == this->getLColor()");
-						return 0;
-					}
-					else if (oppositeEdge2 == this->getLColor() ){
-						LOG("Implement oppositeEdge2 == this->getLColor()");
-						return 0;
-					}
-					else{
-						LOG("Could not find match");
-						return 0;
-					}
-				}
-				break;
-			}
+        if      (((oppositeEdge1 == this->getFColor() ) ||
+						     (oppositeEdge2 == this->getFColor() )) &&
+                 ((oppositeEdge1 == this->getRColor() ) ||
+                 (oppositeEdge2 == this->getRColor() ))){
+                   this->Di();
+                   this->F();
+                   this->Di();
+                   this->Di();
+                   this->Fi();
+                   this->Di();
+                   this->Di();
+                   this->Ri();
+                   this->D();
+                   this-R();
+        }
+        else if (((oppositeEdge1 == this->getRColor() ) ||
+						     (oppositeEdge2 == this->getRColor() )) &&
+                 ((oppositeEdge1 == this->getBColor() ) ||
+                 (oppositeEdge2 == this->getBColor() ))){
+        }
+        else if (((oppositeEdge1 == this->getBColor() ) ||
+						     (oppositeEdge2 == this->getBColor() )) &&
+                 ((oppositeEdge1 == this->getLColor() ) ||
+                 (oppositeEdge2 == this->getLColor() ))){
+
+        }
+        else if (((oppositeEdge1 == this->getLColor() ) ||
+						     (oppositeEdge2 == this->getLColor() )) &&
+                 ((oppositeEdge1 == this->getFColor() ) ||
+                 (oppositeEdge2 == this->getFColor() ))){
+
+        }
+        LOG("Fixed white corner in case 23");
+        break;
+      }
 			default: {
-				LOG("Could not find match");
-				return 0;
+				LOG("Default case statement : Could not find match");
+				return FAIL;
 			}
 		} // end switch statement
 
-		/*
-		if((16 <= counter) & (counter <= 19)){
-			if(counter == 16){
-				if((this->at(27) == this->getLColor()) &
-					(this->at(20) == this->getBColor()))
-					counter++;
-				else{
-					this->Li();
-					this->Di();
-					this->Di();
-					this->L();
-					this->correctEight(counter);
-				}
-			}
-			else if(counter == 17){
-				if((this->at(11) == this->getRColor()) &
-					(this->at(18) == this->getBColor()))
-					counter++;
-				else{
-					this->R();
-					this->Di();
-					this->Di();
-					this->Ri();
-					this->correctSix(counter);
-				}
-			}
-			else if(counter == 18){
-				if((this->at(0) == this->getFColor()) &
-					(this->at(29) == this->getLColor()))
-					counter++;
-				else{
-					this->L();
-					this->D();
-					this->Li();
-					this->Di();
-					this->correctSix(counter);
-				}
-			}
-			else if(counter == 19){
-				if((this->at(2) == this->getFColor()) &
-					(this->at(9) == this->getRColor()))
-					counter++;
-				else{
-					this->Ri();
-					this->Di();
-					this->R();
-					this->D();
-					this->correctEight(counter);
-				}
-			}
-		}
-		else{
-			switch(counter){
-				case 0:
-					this->Fi();
-					this->D();
-					this->D();
-					this->F();
-					this->Di();
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 1:
-					this->F();
-					this->D();
-					this->Fi();
-					this->Di();
-					this->correctEight(counter);
-					break;
-				case 2:
-					this->correctSix(counter);
-					break;
-				case 3:
-					this->correctEight(counter);
-					break;
-				case 4:
-					this->Ri();
-					this->Di();
-					this->R();
-					this->correctSix(counter);
-					break;
-				case 5:
-					this->R();
-					this->Di();
-					this->Di();
-					this->Ri();
-					this->D();
-					this->correctEight(counter);
-					break;
-				case 6:
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 7:
-					this->Di();
-					this->correctEight(counter);
-					break;
-				case 8:
-					this->Bi();
-					this->Di();
-					this->B();
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 9:
-					this->B();
-					this->D();
-					this->Bi();
-					this->D();
-					this->correctEight(counter);
-					break;
-				case 10:
-					this->Di();
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 11:
-					this->Di();
-					this->Di();
-					this->correctEight(counter);
-					break;
-				case 12:
-					this->Li();
-					this->D();
-					this->D();
-					this->L();
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 13:
-					this->L();
-					this->D();
-					this->Li();
-					this->correctEight(counter);
-					break;
-				case 14:
-					this->D();
-					this->correctSix(counter);
-					break;
-				case 15:
-					this->D();
-					this->correctEight(counter);
-					break;
-				case 20:
-					this->Li();
-					this->Fi();
-					this->D();
-					this->D();
-					this->F();
-					this->L();
-					this->Di();
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 21:
-					this->R();
-					this->F();
-					this->D();
-					this->D();
-					this->Fi();
-					this->Ri();
-					this->Di();
-					this->Di();
-					this->correctEight(counter);
-					break;
-				case 22:
-					this->D();
-					this->Li();
-					this->Fi();
-					this->D();
-					this->D();
-					this->F();
-					this->L();
-					this->Di();
-					this->Di();
-					this->correctSix(counter);
-					break;
-				case 23:
-					this->Di();
-					this->R();
-					this->F();
-					this->D();
-					this->D();
-					this->Fi();
-					this->Ri();
-					this->D();
-					this->D();
-					this->correctEight(counter);
-					break;
-				default:
-					cout << "Hit default case in whiteCorners().\n";
-					break;
-			}
-		} */
+    if (startOver){
+      // Could have accidentally messed up previously analyzed corner. Recheck
+      counter = 0;
+    }
+    else{
+      counter++;
+
+      // Reset flag
+      startOver = true;
+    }
+
+    numTurns++;
+    if (numTurns == 10){
+      LOG("Reached 10 moves. Must debug before moving on");
+      return FAIL;
+    }
 	}
-	instruction.push_back("WhiteCorners");
-	return 1;
+	LOG("Returning sucessfully");
+	return PASS;
 }
 
 void Cube::middle_fallLeft(){
