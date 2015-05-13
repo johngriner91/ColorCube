@@ -28,8 +28,8 @@ const int PASS = 1;
 
 using namespace std;
 
-void logError (int lineNumber, string function, const std::string& message)
-{
+// Used to cleanly print log messages
+void logError (int lineNumber, string function, const std::string& message){
     cout << "line: " << setw(4) << lineNumber << " : ";
 		cout << function << ": " <<  message << "\n";
 }
@@ -42,11 +42,15 @@ Cube::Cube( char array[54] ){
 	}
 }
 
-
 // This is the method that solves the Cube by calling the appropriate
 //		methods in the correct order.
 void Cube::solve_cube(){
-	this->print();
+
+  if ( FAIL == this->checkInputs() ){
+    printE("Terminating from checkInput()");
+    return;
+  }
+
 	this->orient();
 
 	if ( FAIL == this->whiteCross() ){
@@ -61,17 +65,39 @@ void Cube::solve_cube(){
 
 	//	At this point, the white side of the cube is complete
 	this->orient();
-	this->middleLayer();
 
-	//	At this point, the middle layer is complete
-	this->yellowCross();
-	this->yellowCorners();
+  if ( FAIL == this->middleLayer() ){
+		printE("Terminating from middleLayer()");
+		return;
+	}
+
+  //	At this point, the middle layer is complete
+  if ( FAIL == this->yellowCross() ){
+		printE("Terminating from yellowCross()");
+		return;
+	}
+
+  //	At this point, the middle layer is complete
+  if ( FAIL == this->yellowCorners() ){
+		printE("Terminating from yellowCorners()");
+		return;
+	}
 
 	//	At this point, the yellow layer is complete
-	this->lLayer_corners();
-	this->lLayer_topEdges();
+
+  if ( FAIL == this->lLayer_corners() ){
+    printE("Terminating from lLayer_corners()");
+    return;
+  }
+
+  if ( FAIL == this->lLayer_topEdges() ){
+    printE("Terminating from lLayer_corners()");
+    return;
+  }
 
 	//	At this point, the cube is completed
+  LOG("At this point, the cube is completed");
+
 	this->print();
 	this->optimizeData();
 
@@ -79,6 +105,54 @@ void Cube::solve_cube(){
 	this->parseResult();
 }
 
+// Make sure that you didn't type anything in wrong
+int Cube::checkInputs(){
+	// Read in the colors of the cube.
+	LOG("Checking Inputs");
+  int checkBlue = 0;
+  int checkOrange = 0;
+  int checkGreen = 0;
+  int checkRed = 0;
+  int checkWhite = 0;
+  int checkYellow = 0;
+
+  char color;
+
+  for(int i = 0; i < 54; i++){
+    color = this->at(i);
+    if(color == 'b')
+      checkBlue++;
+    else if(color == 'o')
+      checkOrange++;
+    else if(color == 'g')
+      checkGreen++;
+    else if(color == 'r')
+      checkRed++;
+    else if(color == 'w')
+      checkWhite++;
+    else if(color == 'y')
+      checkYellow++;
+    else{
+      LOG("Found an unknown color");
+      return FAIL;
+    }
+  }
+
+  if( (checkBlue == 9) &&
+      (checkOrange == 9) &&
+      (checkGreen == 9) &&
+      (checkRed == 9) &&
+      (checkWhite == 9) &&
+      (checkYellow == 9) ) {
+        LOG("Input is valid");
+        return PASS;
+      }
+      else{
+        LOG("Invalid number of colors");
+        return FAIL;
+      }
+
+}
 
 // This method prints out the cube faces in a grid format. Prints in the
 // following format.
@@ -140,7 +214,6 @@ void Cube::print(){
 	}
 	cout << "\n\nCompleted printing\n-----------------\n\n";
 }
-
 
 // Face turn method. This method changed the values of the cubeValues array
 //		to simulate a 90 degree clockwise rotation of the front-side face.
@@ -699,7 +772,6 @@ char Cube::at(int a){
 	return cubeValues[a];
 }
 
-
 //	By orienting the cube, the algorithm to solve the cube can be standardized.
 void Cube::orient(){
 
@@ -773,7 +845,7 @@ void Cube::orient(){
 
 }	// End of Cube::orient()
 
-// Think about the white cross step
+// Make turns to fix the white cross
 int Cube::whiteCross(){
   LOG("Beginning function");
 
@@ -788,12 +860,18 @@ int Cube::whiteCross(){
   bool startOver = true;
 
   // Until we've looked at and approved all the pieces, keep looking
-  while (counter != 24){
+  while (counter < 24){
 
     // We haven't found a white piece yet
     while(this->at(edges[counter]) != 'w'){
       counter++;
+
+      if(counter >= 24){
+        LOG("Reached the end");
+        return PASS;
+      }
     }
+
 
     // Integrate cube turns to "repeat" the position-based algorithm.
 		//	This way, case 0 can be used to handle positions 1, 10, 19, and 28
@@ -809,6 +887,7 @@ int Cube::whiteCross(){
         this->TurnCube();
 
     } // end if (counter < 16)
+
 
     // This switch is the meat and potatos of the function. Depending on
 		//	where the white cross pieces are, we need to make specific turns to
@@ -923,7 +1002,7 @@ int Cube::whiteCross(){
           this->D();
           this->R();
           this->U();
-          this->F();
+          this->Fi();
           this->Ui();
         }
         else if(oppositeEdge == this->getBColor()){
@@ -980,7 +1059,7 @@ int Cube::whiteCross(){
 				break;
       }
       case 17:{
-        char oppositeEdge = this->at(29);
+        char oppositeEdge = this->at(28);
         if(oppositeEdge == this->getFColor()){
           this->L();
           this->U();
@@ -1193,10 +1272,11 @@ int Cube::whiteCross(){
     // Was the piece that was found supposed to be there? If not, start
 		// 	search over, because we may have accidentally moved some pieces out
 		//	of place. I doubt it, but it's always better to double check.
-    if (startOver) {
-			std:string msg = "Fixed white piece at " + to_string(edges[counter]);
-      LOG(msg);
 
+    std:string msg = "Fixed white piece at " + to_string(edges[counter]);
+    LOG(msg);
+
+    if (startOver) {
       counter = 0;
 
       // reset the flag
@@ -1208,7 +1288,7 @@ int Cube::whiteCross(){
 		}
 
     numTurns++;
-    if (numTurns > 10){
+    if (numTurns > 20){
       printE("Over 10 turns for WhiteCross(). Must debug before moving on");
       return 0;
     }
@@ -1249,57 +1329,10 @@ char Cube::getDColor(){
 	return cubeValues[49];
 }
 
-void Cube::correctSix(int &counter){
-	bool found = false;
-	int i = 0;
-	while((!found) & (i < 6)){
-		if(this->at(45) == this->getFColor()){
-			if(this->at(35) == this->getLColor())
-				found = true;
-		}
-		else{
-			this->D();
-			this->TurnCube();
-			i++;
-		}
-	}
-	if(i == 6){
-		this->printE("Error @ correctSix(counter)");
-	}
-	this->D();
-	this->L();
-	this->Di();
-	this->Li();
-	counter = 0;
-}
-
-void Cube::correctEight(int &counter){
-	bool found = false;
-	int i = 0;
-	while((!found) & (i < 6)){
-		if(this->at(47) == this->getFColor()){
-			if(this->at(15) == this->getRColor()){
-				found = true;
-			}
-		}
-		else{
-			this->D();
-			this->TurnCube();
-		}
-	}
-	if(i == 6){
-		this->printE("Error @ correctEight(counter).\nThe searched piece configuration does not seem to exist.\nPlease check work.");
-	}
-	this->Di();
-	this->Ri();
-	this->D();
-	this->R();
-	counter = 0;
-}
-
+// Make turns to fix the white corners
 int Cube::whiteCorners(){
 
-	this->print();
+	LOG("Beginning function");
 
 	int corners[24] ={ 	 0,  2,  6,  8,		// front
 		 									 9, 11, 15, 17,		// right
@@ -1312,16 +1345,27 @@ int Cube::whiteCorners(){
   int numTurns = 0;
   bool startOver = true;
 
-	while(counter < 24){
-		//cout << "counter is " << counter << ".\n";
-		if(this->at(corners[counter]) != 'w'){
-			counter++;
-		}
+  // Until we've looked at and approved all the pieces, keep looking
+  while (counter < 24){
+
+    // We haven't found a white piece yet
+    while(this->at(corners[counter]) != 'w'){
+      counter++;
+
+      if(counter >= 24){
+        LOG("Reached the end");
+        return PASS;
+      }
+    }
+
+    std::string msg2 = "Found white at position "+to_string(corners[counter]);
+    LOG(msg2);
 
 		// Integrate cube turns to "repeat" the position-based algorithm.
 		//	This way, case 0 can be used to handle positions 0, 9, 18, and 27
 		//	without any code rewrite. We'll simply turn the cube until those
 		//	positions "become" case 0.
+
     if (counter < 16){
       int numToTurn = counter / 4;
 
@@ -1529,13 +1573,26 @@ int Cube::whiteCorners(){
 						     (oppositeEdge2 == this->getFColor() )) &&
                  ((oppositeEdge1 == this->getRColor() ) ||
                  (oppositeEdge2 == this->getRColor() ))){
-
+                   this->Li();
+                   this->Di();
+                   this->L();
+                   this->Di();
+                   this->Di();
+                   this->Ri();
+                   this->D();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
                  ((oppositeEdge1 == this->getBColor() ) ||
                  (oppositeEdge2 == this->getBColor() ))){
-
+                   this->Li();
+                   this->Di();
+                   this->L();
+                   this->Di();
+                   this->Bi();
+                   this->D();
+                   this->B();
         }
         else if (((oppositeEdge1 == this->getBColor() ) ||
 						     (oppositeEdge2 == this->getBColor() )) &&
@@ -1543,13 +1600,20 @@ int Cube::whiteCorners(){
                  (oppositeEdge2 == this->getLColor() ))){
 
           // This one is supposed to be white, and the colors match
+          LOG("CASE 16: Supposed to be white");
           startOver = false;
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
                  ((oppositeEdge1 == this->getFColor() ) ||
                  (oppositeEdge2 == this->getFColor() ))){
-
+                   this->B();
+                   this->D();
+                   this->Bi();
+                   this->D();
+                   this->L();
+                   this->Di();
+                   this->Li();
         }
         LOG("Fixed white corner in case 16");
         break;
@@ -1562,7 +1626,14 @@ int Cube::whiteCorners(){
 						     (oppositeEdge2 == this->getFColor() )) &&
                  ((oppositeEdge1 == this->getRColor() ) ||
                  (oppositeEdge2 == this->getRColor() ))){
-
+                   this->R();
+                   this->Di();
+                   this->Ri();
+                   this->Di();
+                   this->Di();
+                   this->Ri();
+                   this->D();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
@@ -1570,44 +1641,75 @@ int Cube::whiteCorners(){
                  (oppositeEdge2 == this->getBColor() ))){
 
           // This one is supposed to be white, and the colors match
+          LOG("CASE 17: Supposed to be white");
           startOver = false;
         }
         else if (((oppositeEdge1 == this->getBColor() ) ||
 						     (oppositeEdge2 == this->getBColor() )) &&
                  ((oppositeEdge1 == this->getLColor() ) ||
                  (oppositeEdge2 == this->getLColor() ))){
-
+                   this->Bi();
+                   this->Di();
+                   this->B();
+                   this->Li();
+                   this->Di();
+                   this->Di();
+                   this->L();
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
                  ((oppositeEdge1 == this->getFColor() ) ||
                  (oppositeEdge2 == this->getFColor() ))){
-
+                   this->R();
+                   this->D();
+                   this->Ri();
+                   this->D();
+                   this->D();
+                   this->L();
+                   this->Di();
+                   this->Li();
         }
         LOG("Fixed white corner in case 17");
         break;
       }
 			case 18:{
 				char oppositeEdge1 = this->at(0);
-				char oppositeEdge2 = this->at(30);
+				char oppositeEdge2 = this->at(29);
 
         if      (((oppositeEdge1 == this->getFColor() ) ||
 						     (oppositeEdge2 == this->getFColor() )) &&
                  ((oppositeEdge1 == this->getRColor() ) ||
                  (oppositeEdge2 == this->getRColor() ))){
-
+                   this->L();
+                   this->D();
+                   this->Li();
+                   this->Ri();
+                   this->Di();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
                  ((oppositeEdge1 == this->getBColor() ) ||
                  (oppositeEdge2 == this->getBColor() ))){
+                   this->L();
+                   this->R();
+                   this->Di();
+                   this->Di();
+                   this->Li();
+                   this->Ri();
 
         }
         else if (((oppositeEdge1 == this->getBColor() ) ||
 						     (oppositeEdge2 == this->getBColor() )) &&
                  ((oppositeEdge1 == this->getLColor() ) ||
                  (oppositeEdge2 == this->getLColor() ))){
-
+                   this->L();
+                   this->D();
+                   this->Li();
+                   this->B();
+                   this->Di();
+                   this->Di();
+                   this->Bi();
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
@@ -1615,6 +1717,7 @@ int Cube::whiteCorners(){
                  (oppositeEdge2 == this->getFColor() ))){
 
           // This one is supposed to be white, and the colors match
+          LOG("CASE 18: Supposed to be white");
           startOver = false;
         }
         LOG("Fixed white corner in case 18");
@@ -1630,25 +1733,42 @@ int Cube::whiteCorners(){
                  (oppositeEdge2 == this->getRColor() ))){
 
           // This one is supposed to be white, and the colors match
+          LOG("CASE 19: Supposed to be white");
           startOver = false;
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
                  ((oppositeEdge1 == this->getBColor() ) ||
                  (oppositeEdge2 == this->getBColor() ))){
-
+                   this->Ri();
+                   this->Di();
+                   this->R();
+                   this->Bi();
+                   this->Di();
+                   this->Di();
+                   this->B();
         }
         else if (((oppositeEdge1 == this->getBColor() ) ||
 						     (oppositeEdge2 == this->getBColor() )) &&
                  ((oppositeEdge1 == this->getLColor() ) ||
                  (oppositeEdge2 == this->getLColor() ))){
-
+                   this->Ri();
+                   this->Li();
+                   this->Di();
+                   this->Di();
+                   this->L();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
                  ((oppositeEdge1 == this->getFColor() ) ||
                  (oppositeEdge2 == this->getFColor() ))){
-
+                   this->Ri();
+                   this->Di();
+                   this->R();
+                   this->L();
+                   this->D();
+                   this->Li();
         }
         LOG("Fixed white corner in case 19");
         break;
@@ -1661,7 +1781,14 @@ int Cube::whiteCorners(){
 						     (oppositeEdge2 == this->getFColor() )) &&
                  ((oppositeEdge1 == this->getRColor() ) ||
                  (oppositeEdge2 == this->getRColor() ))){
-
+                   this->D();
+                   this->F();
+                   this->Di();
+                   this->Fi();
+                   this->D();
+                   this->Ri();
+                   this->D();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
@@ -1681,13 +1808,25 @@ int Cube::whiteCorners(){
 						     (oppositeEdge2 == this->getBColor() )) &&
                  ((oppositeEdge1 == this->getLColor() ) ||
                  (oppositeEdge2 == this->getLColor() ))){
-
+                   this->Li();
+                   this->D();
+                   this->L();
+                   this->B();
+                   this->Di();
+                   this->Di();
+                   this->Bi();
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
                  ((oppositeEdge1 == this->getFColor() ) ||
                  (oppositeEdge2 == this->getFColor() ))){
-
+                   this->Fi();
+                   this->D();
+                   this->F();
+                   this->L();
+                   this->Di();
+                   this->Di();
+                   this->Li();
         }
         LOG("Fixed white corner in case 20");
         break;
@@ -1700,7 +1839,13 @@ int Cube::whiteCorners(){
 						     (oppositeEdge2 == this->getFColor() )) &&
                  ((oppositeEdge1 == this->getRColor() ) ||
                  (oppositeEdge2 == this->getRColor() ))){
-
+                   this->F();
+                   this->Di();
+                   this->Fi();
+                   this->Ri();
+                   this->Di();
+                   this->Di();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
@@ -1772,19 +1917,39 @@ int Cube::whiteCorners(){
 						     (oppositeEdge2 == this->getRColor() )) &&
                  ((oppositeEdge1 == this->getBColor() ) ||
                  (oppositeEdge2 == this->getBColor() ))){
-
+                   this->Di();
+                   this->R();
+                   this->Di();
+                   this->Ri();
+                   this->D();
+                   this->Bi();
+                   this->D();
+                   this->B();
         }
         else if (((oppositeEdge1 == this->getBColor() ) ||
 						     (oppositeEdge2 == this->getBColor() )) &&
                  ((oppositeEdge1 == this->getLColor() ) ||
                  (oppositeEdge2 == this->getLColor() ))){
-
+                   this->Li();
+                   this->D();
+                   this->L();
+                   this->B();
+                   this->Di();
+                   this->Di();
+                   this->Bi();
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
                  ((oppositeEdge1 == this->getFColor() ) ||
                  (oppositeEdge2 == this->getFColor() ))){
-
+                   this->D();
+                   this->L();
+                   this->Di();
+                   this->L();
+                   this->Fi();
+                   this->Di();
+                   this->Di();
+                   this->F();
         }
         LOG("Fixed white corner in case 22");
         break;
@@ -1806,24 +1971,46 @@ int Cube::whiteCorners(){
                    this->Di();
                    this->Ri();
                    this->D();
-                   this-R();
+                   this->R();
         }
         else if (((oppositeEdge1 == this->getRColor() ) ||
 						     (oppositeEdge2 == this->getRColor() )) &&
                  ((oppositeEdge1 == this->getBColor() ) ||
                  (oppositeEdge2 == this->getBColor() ))){
+                   this->R();
+                   this->Di();
+                   this->Ri();
+                   this->Bi();
+                   this->Di();
+                   this->Di();
+                   this->B();
         }
         else if (((oppositeEdge1 == this->getBColor() ) ||
 						     (oppositeEdge2 == this->getBColor() )) &&
                  ((oppositeEdge1 == this->getLColor() ) ||
                  (oppositeEdge2 == this->getLColor() ))){
-
+                   this->D();
+                   this->Li();
+                   this->D();
+                   this->L();
+                   this->B();
+                   this->D();
+                   this->D();
+                   this->Bi();
         }
         else if (((oppositeEdge1 == this->getLColor() ) ||
 						     (oppositeEdge2 == this->getLColor() )) &&
                  ((oppositeEdge1 == this->getFColor() ) ||
                  (oppositeEdge2 == this->getFColor() ))){
-
+                   this->Di();
+                   this->Di();
+                   this->L();
+                   this->Di();
+                   this->Li();
+                   this->Fi();
+                   this->Di();
+                   this->Di();
+                   this->F();
         }
         LOG("Fixed white corner in case 23");
         break;
@@ -1845,9 +2032,10 @@ int Cube::whiteCorners(){
       startOver = true;
     }
 
+    // Make sure we're not spiraling into a black hole of death
     numTurns++;
-    if (numTurns == 10){
-      LOG("Reached 10 moves. Must debug before moving on");
+    if (numTurns > 20){
+      LOG("Reached 20 moves. Must debug before moving on");
       return FAIL;
     }
 	}
@@ -1855,6 +2043,7 @@ int Cube::whiteCorners(){
 	return PASS;
 }
 
+// Sequence used in fixing middle layer
 void Cube::middle_fallLeft(){
 	this->Ui();
 	this->Li();
@@ -1866,6 +2055,7 @@ void Cube::middle_fallLeft(){
 	this->Fi();
 }
 
+// Sequence used in fixing middle layer
 void Cube::middle_fallRight(){
 	this->U();
 	this->R();
@@ -1877,15 +2067,28 @@ void Cube::middle_fallRight(){
 	this->F();
 }
 
-void Cube::middleLayer(){
+// Make turns to fix middle layer
+int Cube::middleLayer(){
+
+  LOG("Beginning function");
+
+  bool complete = false;
+
+  // Turn the white side down, as per Rubik's solution
 	this->RollCube();
 	this->RollCube();
-	bool complete = false;
-	while(!complete){
-		if((this->at(3) == this->getFColor()) & (this->at(5) == this->getFColor()) &
-		(this->at(12) == this->getRColor()) & (this->at(14) == this->getRColor()) &
-		(this->at(21) == this->getBColor()) & (this->at(23) == this->getBColor()) &
-		(this->at(30) == this->getLColor()) & (this->at(32) == this->getLColor())){
+
+	while( !complete ){
+    // If the middle layer is completed,
+		if( (this->at(3) == this->getFColor()) &
+        (this->at(5) == this->getFColor()) &
+		    (this->at(12) == this->getRColor()) &
+        (this->at(14) == this->getRColor()) &
+		    (this->at(21) == this->getBColor()) &
+        (this->at(23) == this->getBColor()) &
+		    (this->at(30) == this->getLColor()) &
+        (this->at(32) == this->getLColor()) ){
+
 			instruction.push_back("Middle");
 			complete = true;
 		}
@@ -1897,7 +2100,8 @@ void Cube::middleLayer(){
 			bool notAlignedThree = false;
 			bool allYellowSides = false;
 
-
+      // In order to fix the middle layer, we need to see which piece needs to
+      //  fall down to the sides.
 			if((this->at(1) != 'y') & (this->at(43) != 'y'))
 				situation = 0;
 			else if((this->at(10) != 'y') & (this->at(41) != 'y'))
@@ -1909,8 +2113,17 @@ void Cube::middleLayer(){
 			else
 				situation = 4;
 
+      // Situations 0-3 mean that a side was found that didn't have a
+      //  yellow piece on the "fall down" side. Situation 4 is the situation
+      //  that all the pieces had a yellow face.
+
+      // Based on the situation,
+      std::string msg = "Situation " + to_string(situation) + " determined";
+      LOG(msg);
+
+      // Depending on the situation, make the appropriate turns
 			switch(situation){
-				case 0:
+				case 0:{
 					notAlignedZero = true;
 					while(notAlignedZero){
 						if(this->at(1) == this->getFColor())
@@ -1925,7 +2138,8 @@ void Cube::middleLayer(){
 					else
 						this->middle_fallLeft();
 					break;
-				case 1:
+        }
+				case 1:{
 					this->TurnCube();
 					notAlignedOne = true;
 					while(notAlignedOne){
@@ -1942,7 +2156,8 @@ void Cube::middleLayer(){
 					else
 						this->middle_fallLeft();
 					break;
-				case 2:
+        }
+				case 2:{
 					this->TurnCube();
 					this->TurnCube();
 					notAlignedTwo = true;
@@ -1960,7 +2175,8 @@ void Cube::middleLayer(){
 					else
 						this->middle_fallLeft();
 					break;
-				case 3:
+        }
+				case 3:{
 					this->TurnCube();
 					this->TurnCube();
 					this->TurnCube();
@@ -1978,11 +2194,16 @@ void Cube::middleLayer(){
 					else
 						this->middle_fallLeft();
 					break;
-				case 4:
+        }
+
+        // SPECIAL CASE: Each side had yellow
+				case 4:{
 					allYellowSides = false;
 					if((this->at(1) == 'y') & (this->at(10) == 'y') &
 						(this->at(19) == 'y') & (this->at(28) == 'y'))
 							allYellowSides = true;
+
+          // All sides are yellow
 					if(allYellowSides){
 						bool wrongSide = true;
 						while(wrongSide){
@@ -2007,6 +2228,7 @@ void Cube::middleLayer(){
 							this->middle_fallLeft();
 						}
 					}
+          // Not all sides are yellow
 					else{
 						while(this->at(1) == 'y')
 							this->U();
@@ -2020,26 +2242,43 @@ void Cube::middleLayer(){
 							this->middle_fallRight();
 					}
 					break;
+        }
 				default:
 					this->printE("Hit default case in Middle Layer switch statement");
 			}
 		}
-		}
-		}
+	}
 
-void Cube::yellowCross(){
+  LOG("Returning sucessfully");
+  return PASS;
+}
+
+// Make turns to fix the yellow cross
+int Cube::yellowCross(){
 	LOG("Beginning function");
 	bool completed = false;
+
 	while(!completed){
-		if((this->at(37) == 'y') & (this->at(39) == 'y') &
-		(this->at(41) == 'y') & (this->at(43) == 'y')){
-			completed = true;
+    // At this point, the yellow cross is completed
+		if( (this->at(37) == 'y') &
+        (this->at(39) == 'y') &
+		    (this->at(41) == 'y') &
+        (this->at(43) == 'y') ){
+
 			instruction.push_back("YellowCross");
-			return;
+      LOG("Returning Sucessfully from completed point");
+      return PASS;
 		}
+
+    // Need to keep going
 		else{
 			bool onlyCenter = true;
+
+      LOG("Fixing the yellow cross pieces");
+
 			for(int i = 0; i < 4; i++){
+
+        // Specific sequence for the yellow "Line"
 				if((this->at(39) == 'y') & (this->at(41) == 'y')){
 					onlyCenter = false;
 					this->F();
@@ -2050,6 +2289,7 @@ void Cube::yellowCross(){
 					this->Fi();
 					break;
 				}
+        // Specific sequence for the yellow "U"
 				else if((this->at(37) == 'y') & (this->at(39) == 'y')){
 					onlyCenter = false;
 					this->F();
@@ -2063,6 +2303,7 @@ void Cube::yellowCross(){
 				else
 					this->U();
 			}
+      //  Only the center piece is yellow, specific sequence
 			if(onlyCenter){
 				this->F();
 				this->U();
@@ -2073,8 +2314,11 @@ void Cube::yellowCross(){
 			}
 		}
 	}
+  LOG("Did not return from expected place. Debug");
+  return FAIL;
 }
 
+// Make turns used in yellow cross
 void Cube::yellowCrossSequence(){
 	LOG("Beginning Function");
 	this->R();
@@ -2085,13 +2329,21 @@ void Cube::yellowCrossSequence(){
 	this->U();
 	this->U();
 	this->Ri();
-
+  LOG("Returning Sucessfully");
 }
 
-void Cube::yellowCorners(){
-	int numCorners = 0;
-	while(numCorners != 4){
-		numCorners = 0;
+// Make turns to fix the yellow corners
+int Cube::yellowCorners(){
+
+  LOG("Beginning Function");
+
+  int numCorners = 0;
+
+  while(numCorners != 4){
+
+    numCorners = 0;
+
+    // Determine how many corners are set
 		if(this->at(36) == 'y')
 			numCorners++;
 		if(this->at(38) == 'y')
@@ -2101,6 +2353,7 @@ void Cube::yellowCorners(){
 		if(this->at(44) == 'y')
 			numCorners++;
 
+    // What to do?.....
 		if(numCorners == 0){
 			while(this->at(29) != 'y')
 				this->U();
@@ -2116,19 +2369,26 @@ void Cube::yellowCorners(){
 				this->U();
 			this->yellowCrossSequence();
 		}
+    // Otherwise, we are assuming things worked out fine
 		else{
 			instruction.push_back("YellowCorners");
-			return;
+      LOG("Returning Successfully");
+			return PASS;
 		}
 	}
+
+  LOG("Exiting function from unexpected point");
+  return FAIL;
 }
 
+// Make turns used in lLayer_corners()
 void Cube::lLayer_cornerSequence(){
 	if(this->at(0) == this->at(4))
 		if(this->at(9) == this->at(13))
 			if(this->at(18) == this->at(21))
-				if(this->at(27) == this->at(30))
+				if(this->at(27) == this->at(30)){
 					return;
+        }
 	this->Ri();
 	this->F();
 	this->Ri();
@@ -2144,9 +2404,13 @@ void Cube::lLayer_cornerSequence(){
 	this->Ui();
 }
 
-void Cube::lLayer_corners(){
+// Make turns to fix the last layer corners
+int Cube::lLayer_corners(){
+  LOG("Beginning function");
+
 	int situation = 0;
-	if(this->at(0) == this->at(2))
+
+  if(this->at(0) == this->at(2))
 		situation = 0;
 	else if(this->at(9) == this->at(11))
 		situation = 1;
@@ -2157,6 +2421,10 @@ void Cube::lLayer_corners(){
 	else
 		situation = 4;
 
+  std::string msg = "Situation is " + to_string(situation);
+  LOG(msg);
+
+  // Depending on the situation, make the appropriate turns
 	if(situation == 0){
 		while(this->at(0) != this->at(4)){
 			this->Ui();
@@ -2166,7 +2434,8 @@ void Cube::lLayer_corners(){
 		this->TurnCube();
 		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;
+    LOG("Returning successfully");
+		return PASS;
 	}
 	else if(situation == 1){
 		this->TurnCube();
@@ -2178,7 +2447,8 @@ void Cube::lLayer_corners(){
 		this->TurnCube();
 		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;
+    LOG("Returning successfully");
+		return PASS;
 	}
 	else if(situation == 2){
 		this->TurnCube();
@@ -2191,7 +2461,8 @@ void Cube::lLayer_corners(){
 		this->TurnCube();
 		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;
+    LOG("Returning successfully");
+		return PASS;
 	}
 	else if(situation == 3){
 		this->TurnCube();
@@ -2205,7 +2476,8 @@ void Cube::lLayer_corners(){
 		this->TurnCube();
 		this->lLayer_cornerSequence();
 		instruction.push_back("LLC");
-		return;
+    LOG("Returning successfully");
+		return PASS;
 	}
 	else{
 		while(this->at(0) != this->at(4)){
@@ -2216,9 +2488,14 @@ void Cube::lLayer_corners(){
 		this->TurnCube();
 		this->lLayer_cornerSequence();
 		this->lLayer_corners();
+    LOG("Returning successfully");
+		return PASS;
 	}
+  LOG("Exiting function from unexpected place");
+  return FAIL;
 }
 
+// Make turns used in last layer
 void Cube::lLayer_topSequenceClock(){
 	this->F();
 	this->F();
@@ -2234,6 +2511,7 @@ void Cube::lLayer_topSequenceClock(){
 	this->F();
 }
 
+// Make turns used in lasy layer
 void Cube::lLayer_topSequenceCounter(){
 	this->F();
 	this->F();
@@ -2249,17 +2527,26 @@ void Cube::lLayer_topSequenceCounter(){
 	this->F();
 }
 
-void Cube::lLayer_topEdges(){
+// Make turns to fix the last layer center edges
+int Cube::lLayer_topEdges(){
 	int i = 0;
+
 	bool completed = false;
-	if(this->at(1) == this->at(4))
+
+  // Check to see if the last layer center edges are set
+  if(this->at(1) == this->at(4))
 		if(this->at(10) == this->at(13))
 			if(this->at(19) == this->at(21))
-				if(this->at(28) == this->at(29))
-					return;
+				if(this->at(28) == this->at(29)){
+					LOG("Returning successfully");
+          return PASS;
+        }
 
+  // Not completed, make the appropriate turns
 	while(!completed){
 		i = 0;
+
+    // Make sure the back edge is the solid side
 		while((this->at(19) != this->getBColor()) & (i < 4)){
 			this->TurnCube();
 			i++;
@@ -2272,14 +2559,20 @@ void Cube::lLayer_topEdges(){
 				this->lLayer_topSequenceClock();
 				instruction.push_back("DONE");
 				completed = true;
+        LOG("Returning successfully");
+        return PASS;
 			}
 			else if(this->at(1) == this->getRColor()){
 				this->lLayer_topSequenceCounter();
 				instruction.push_back("DONE");
 				completed = true;
+        LOG("Returning successfully");
+        return PASS;
 			}
 		}
 	}
+  LOG("Exiting function from unexpected place");
+  return FAIL;
 }
 
 void Cube::optimizeData(){

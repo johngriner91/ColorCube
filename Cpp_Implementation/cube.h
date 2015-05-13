@@ -27,43 +27,41 @@
 //	The Cube type to implement the virtual Rubiks Cube.
 class Cube{
 	public:
-		Cube(char array[54]);	//	Constructor, initializes cubeValues[]
-		void print();					//	Prints out the faces of the cube.
-		char at(int);					//	Returns the color of the face at index a
-		char getFColor();			//	Returns the center color of the front face
-		char getRColor();			//	Returns the center color of the right face
-		char getBColor();			//	Returns the center color of the back face
-		char getLColor();			//	Returns the center color of the left face
-		char getUColor();			//	Returns the center color of the top face
-		char getDColor();			//	Returns the center color of the bottom face
-		void parseResult();		//	interprets the found solution
-		void optimizeData();	//	edits the solution method
+		Cube(char array[54]);			//	Constructor, initializes cubeValues[]
 
-		void solve_cube();		//	calls the necessary functions to solve the cube
+		int checkInputs();				// 	Checks that the input is valid
+		void print();							//	Prints out the faces of the cube.
+		void printE(std::string); //	Print function with error alerts
+		char at(int);							//	Returns the color of the face at index a
+		char getFColor();					//	Returns the center color of the front face
+		char getRColor();					//	Returns the center color of the right face
+		char getBColor();					//	Returns the center color of the back face
+		char getLColor();					//	Returns the center color of the left face
+		char getUColor();					//	Returns the center color of the top face
+		char getDColor();					//	Returns the center color of the bottom face
+		void parseResult();				//	Interprets the found solution
+		void optimizeData();			//	Edits the solution method
+
+		void solve_cube();				//	calls the necessary functions to solve the cube
 
 		// The following methods are methods are steps to solve the Rubik's
 		//		Cube, as per the Official Rubik's Cube Solution Guide.
+		void orient();                   	//	positions the cube white up, blue front
+		int whiteCross();   	         	 	//	solves the 'white cross' step
+		int whiteCorners();							 	//	solves the 'white corners' step
+		int middleLayer();		           	//	solves the middle layer
+		int yellowCross();		           	//	solves the 'yellow cross' step
+		int yellowCorners();		        	//	solves the 'yellow corners' step
+		int lLayer_corners();	 	       		//	solves the corner pieces of last layer
+		int lLayer_topEdges();		      	//	solves the last layer 'edge' pieces
 
-		void orient();                   //	positions the cube white up, blue front
-		int whiteCross();   	         	 //	solves the 'white cross' step
-		int whiteCorners();	           //	solves the 'white corners' step
-
-		//  Eventually, the following two methods will be replaced
-		void correctSix(int&);		       //	solves the white corner from position 6
-		void correctEight(int&);		     //	solves the white corner from position 8
-
-		void printE(std::string);        //	print function with error alerts
-		void middle_fallLeft();	         //	middle layer solving
-		void middle_fallRight();		     //	middle layer solving
-		void middleLayer();		           //	solves the middle layer
-		void yellowCross();		           //	solves the 'yellow cross' step
-		void yellowCrossSequence();		   //	turns that solve the 'yellow cross'
-		void yellowCorners();		         //	solves the 'yellow corners' step
-		void lLayer_cornerSequence();		 //	turns for the last layer corners
-		void lLayer_corners();	 	       //	solves the corner pieces of last layer
-		void lLayer_topSequenceClock();	 //	rotate last layer edge pieces clockwise
-		void lLayer_topSequenceCounter();//	rotate last layer edge pieces counter
-		void lLayer_topEdges();		       //	solves the last layer 'edge' pieces
+		// Support function
+		void middle_fallLeft();	         	//	middle layer solving
+		void middle_fallRight();		     	//	middle layer solving
+		void yellowCrossSequence();		   	//	turns that solve the 'yellow cross'
+		void lLayer_cornerSequence();		 	//	turns for the last layer corners
+		void lLayer_topSequenceClock();	 	//	rotate last layer edge pieces clockwise
+		void lLayer_topSequenceCounter();	//	rotate last layer edge pieces counter
 
 	private:
 		char cubeValues[54];	//	Stores the colors of each square on the cube.

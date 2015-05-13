@@ -1,18 +1,23 @@
-r w g
-g b o
-g y b
-r g o
-g o r
-o y b
-g o w
-w g o
-r o b
-b b y
-y r w
-y b o
-o b w
-y w r
-g b w
-y g y
-r y r
-r w w
+r b g
+y b g
+r w b
+
+o o w
+r o w
+y r y
+
+b b o
+r g g
+b w w
+
+g o g
+y r o
+b w g
+
+w r o
+g w b
+w y y
+
+y g r
+b y y
+r o o
