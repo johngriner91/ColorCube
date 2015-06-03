@@ -15,7 +15,11 @@
     <link href="../frontEnd/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 
     <!-- JQuery -->
-		<script charset="utf-8" src="examples/basic/scripts/jquery.js"></script>
+		<script charset="utf-8" src="scripts/jquery-2.1.4.min.js"></script>
+
+		<!-- Scripts -->
+		<script src="scripts/solve_cube.js"></script>
+		<script src="scripts/CubeTurns/whiteCorners.js"></script>
 
     <h1 class="heading">Color Cube : Load the Colors</h1>
 	</head>
@@ -191,17 +195,19 @@
       	var $message = "";
 
 				// --------------- Create a string message showing indexes and colors
-				// --------------- 	Useful for debugging. 
+				// --------------- 	Useful for debugging.
 				for(var $i = 0; $i < 54; $i++)
 				{
       		$message += "Square "+$i+" is " + $color_values[$i] + ".\n";
       	}
       	console.log($message);
 
+
     		//  TODO
       	//  At this point, we have an array with values. I need to send
       	//      those values to a java solve function. Next things next,
       	//      it looks like I am going to have to port it to Java!!! :(
+				solve();
 			});
     });
     </script>
