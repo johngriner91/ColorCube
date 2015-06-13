@@ -10,9 +10,6 @@
 | 	solves the cube and prints out the proper steps so the user will
 |		be able to solve it too.
 |
-|
-|	How it works.
-|
 +---------------------------------------------------------------------------
 */
 
@@ -102,7 +99,7 @@ void Cube::solve_cube(){
 	this->optimizeData();
 
 	//	The optimized solution is provided to the user
-	this->parseResult();
+	//this->parseResult();
 }
 
 // Make sure that you didn't type anything in wrong
@@ -157,7 +154,7 @@ int Cube::checkInputs(){
 // This method prints out the cube faces in a grid format. Prints in the
 // following format.
 void Cube::print(){
-	cout << "Printing the cubeValues\n-----------------";
+	cout << "\n\nPrinting the cubeValues\n-----------------";
 
 	// Print the front facing cube faces
 	cout << "\n\nFront\n-------\n";
@@ -212,7 +209,7 @@ void Cube::print(){
 		else
 			cout << cubeValues[i] << " ";
 	}
-	cout << "\n\nCompleted printing\n-----------------\n\n";
+  cout << endl << endl;
 }
 
 // Face turn method. This method changed the values of the cubeValues array
@@ -841,7 +838,7 @@ void Cube::orient(){
 	}
 		// Note that the cube was oriented
     instruction.push_back("OC");
-		cout << "The cube has been oriented.\n\n";
+		LOG("The cube has been oriented.");
 
 }	// End of Cube::orient()
 

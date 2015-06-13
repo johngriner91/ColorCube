@@ -13,11 +13,12 @@
 
 HOW IS THE CUBE STORED?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	On a standard 3x3 Rubik's cube, there are 6 faces, each one with
+On a standard 3x3 Rubik's cube, there are 6 faces, each one with
 9 small faces. Doing the math, we find that there are 54 small faces
 on each cube. The faces are stored in an array, a private data value
 of the Cube class (cube.h, line 66).
-	In order for the program to correctly solve the cube, it is
+
+  In order for the program to correctly solve the cube, it is
 important that the input cube values are oriented in a certain way.
 The following is how the cubeValues[] is allocated:
 
@@ -39,7 +40,6 @@ the blue side is facing the front.
 
 	The turn functions (F(), B(), I(), etc.) simply manipulate the
 cubeValues() to represent the changed faces.
-
 
 
 HOW IS THE CUBE SOLVED?
