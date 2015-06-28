@@ -3,24 +3,15 @@
 #   
 #   Methods:
 #     __init__  : initialize class data
-#     F : cube turn - front clockwise
-#     R : cube turn - right clockwise
-#     B : cube turn - back clockwise
-#     L : cube turn - left clockwise
-#     U : cube turn - top clockwise
-#     D : cube turn - bottom clockwise
-#     Fi  : cube turn - front counterclockwise
-#     Ri  : cube turn - right counterclockwise
-#     Bi  : cube turn - back counterclockwise
-#     Li  : cube turn - left counterclockwise
-#     Ui  : cube turn - top counterclockwise
-#     Di  : cube turn - bottom counterclockwise
+#     Clockwise Turns (F-D) : turn the cube face clockwise
+#     Counterclockwise Turns (Fi-Di) : turn the cube face counterclockwise
 #
 ##############################################################################
 
 class Cube:
     "Class that defines and implements the Cube functionality"
     
+    # This is the constructor. With the input file, initialize data
     def __init__(self, data):
         self.data = data
 
@@ -252,29 +243,33 @@ class Cube:
         print("-----------------------------------------------")        
         print()
         
+    # Get the color at a specific index
+    def at(self, index):
+        return self.data[index]
+        
     # Return the color of the front side
-    def get_front_color(self):
-        return data[4]
+    def get_F_color(self):
+        return self.data[4]
         
     # Return the color of the right side
-    def get_front_color(self):
-        return data[13]
+    def get_R_color(self):
+        return self.data[13]
         
     # Return the color of the back side
-    def get_front_color(self):
-        return data[22]
+    def get_B_color(self):
+        return self.data[22]
         
     # Return the color of the left side
-    def get_front_color(self):
-        return data[31]
+    def get_L_color(self):
+        return self.data[31]
         
     # Return the color of the top side
-    def get_front_color(self):
-        return data[40]
+    def get_U_color(self):
+        return self.data[40]
         
     # Return the color of the bottom side
-    def get_front_color(self):
-        return data[49]
+    def get_D_color(self):
+        return self.data[49]
         
     # Make sure there are an even number of colors 
     def check_inputs(self):
@@ -325,6 +320,7 @@ class Cube:
 		# Positions of center pieces
         centers = {4, 13, 22, 31, 40, 49}      
                     
+        # If start can't go to finish, return early. 
         if start in edges and finish in corners:
             print("Invalid turn. Terminating.")
             return
@@ -335,13 +331,108 @@ class Cube:
             print("Invalid turn. Terminating.")
             return
             
+        # TODO: There has to be a better Python way to do this loop
         if start in edges:   
             for i,x in enumerate(self.data):
                 if i in edges:
                     if x is 'w':
                         index = i
                         break
-            print("Index is", index)
-
+            
+            # Depending on where the piece was found, perform specific turns
+            if index == 37:
+                oppositeEdge = self.at(19)
+                if oppositeEdge == self.get_F_color():
+                    self.Bi()
+                    self.Bi()
+                    self.Di()
+                    self.Di()
+                    self.F()
+                    self.F()
+                elif oppositeEdge == self.get_R_color():
+                    self.Bi()
+                    self.Ui()
+                    self.B()
+                    self.U()
+                elif oppositeEdge == self.get_B_color():
+                    pass
+                elif oppositeEdge == self.get_L_color():
+                    self.B()
+                    self.U()
+                    self.Bi()
+                    self.Ui()
+                else:
+                    print("whiteCross(): case 37: ERROR")
+            elif index == 39:
+                oppositeEdge = self.at(28)
+                if oppositeEdge == self.getFColor():
+                    self.L()
+                    self.U()
+                    self.Li()
+                    self.Ui()
+                elif oppositeEdge == self.getRColor():
+                    self.Li()
+                    self.Li()
+                    self.Di()
+                    self.Di()
+                    self.R()
+                    self.R()
+                elif oppositeEdge == self.getBColor():
+                    self.Li()
+                    self.Ui()
+                    self.L()
+                    self.U()
+                elif oppositeEdge == self.getLColor():
+                    pass
+                else:
+                    print("whiteCross(): case 37: ERROR")
+            elif index == 41:
+                oppositeEdge = self.at(10);
+                if oppositeEdge == self.getFColor():
+                    self.Ri()
+                    self.Ui()
+                    self.R()
+                    self.U()
+                elif oppositeEdge == self.getRColor():
+                    pass
+                elif oppositeEdge == self.getBColor():
+                    self.R()
+                    self.U()
+                    self.Ri()
+                    self.Ui()
+                elif oppositeEdge == self.getLColor():
+                    self.R()
+                    self.R()
+                    self.Di()
+                    self.Di()
+                    self.Li()
+                    self.Li()
+                else:
+                    print("whiteCross(): case 41: ERROR")
+            elif index == 43:
+                oppositeEdge = self.at(1);
+                if oppositeEdge == self.getFColor():
+                    pass
+                elif oppositeEdge == self.getRColor():
+                    self.F()
+                    self.U()
+                    self.Fi()
+                    self.Ui()
+                elif oppositeEdge == self.getBColor():
+                    self.F()
+                    self.F()
+                    self.Di()
+                    self.Di()
+                    self.Bi()
+                    self.Bi()
+                elif oppositeEdge == self.getLColor():
+                    self.Fi()
+                    self.Ui()
+                    self.F()
+                    self.U()
+                else:
+                    print("whiteCross(): case 43: ERROR")
+     
+      
         elif start in corners:
             print()
