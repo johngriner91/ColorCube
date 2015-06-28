@@ -251,7 +251,31 @@ class Cube:
                 print()
         print("-----------------------------------------------")        
         print()
-       
+        
+    # Return the color of the front side
+    def get_front_color(self):
+        return data[4]
+        
+    # Return the color of the right side
+    def get_front_color(self):
+        return data[13]
+        
+    # Return the color of the back side
+    def get_front_color(self):
+        return data[22]
+        
+    # Return the color of the left side
+    def get_front_color(self):
+        return data[31]
+        
+    # Return the color of the top side
+    def get_front_color(self):
+        return data[40]
+        
+    # Return the color of the bottom side
+    def get_front_color(self):
+        return data[49]
+        
     # Make sure there are an even number of colors 
     def check_inputs(self):
         if (self.data.count("b") and self.data.count("o") and 
@@ -260,7 +284,7 @@ class Cube:
             return True
         else:
             return False
-    
+                  
     # Perform the appropriate steps to solve the cube      
     def solve_cube(self):
         self.orient_cube()
@@ -269,3 +293,55 @@ class Cube:
         self.yellow_side()
         self.last_layer()
         
+    def orient_cube(self):
+        print()
+            
+    def white_side(self):
+        self.move_white_piece(1,50)
+        print()
+        
+    def middle_layer(self):
+        print()
+        
+    def yellow_side(self):
+        print()
+        
+    def last_layer(self):
+        print()
+        
+    # Move around the white pieces        
+    def move_white_piece(self, start, finish):
+        
+        # Positions of edge pieces
+        edges = {	 1,  3,  5,  7, 10, 12, 14, 16, 
+	  				19, 21, 23, 25, 28, 30, 32, 34,
+					37, 39, 41, 43, 46, 48, 50, 52 };
+		
+		# Positions of corner pieces
+        corners = {  0,  2,  6,  8,  9, 11, 15, 17,
+					18, 20, 24, 26,	27, 29, 33, 35,
+					36, 38, 42, 44,	45, 47, 51, 53 };
+										
+		# Positions of center pieces
+        centers = {4, 13, 22, 31, 40, 49}      
+                    
+        if start in edges and finish in corners:
+            print("Invalid turn. Terminating.")
+            return
+        if start in corners and finish in edges:
+            print("Invalid turn. Terminating.")
+            return
+        if start in centers or finish in centers:
+            print("Invalid turn. Terminating.")
+            return
+            
+        if start in edges:   
+            for i,x in enumerate(self.data):
+                if i in edges:
+                    if x is 'w':
+                        index = i
+                        break
+            print("Index is", index)
+
+        elif start in corners:
+            print()
