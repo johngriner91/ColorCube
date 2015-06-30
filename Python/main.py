@@ -10,6 +10,7 @@ from Cube import Cube
 
 # Variables
 data = []
+instruction = []
 inputFile = "../input/input_0.txt"
 
 # Open up the input file and read in the cube values
@@ -20,7 +21,7 @@ with open(inputFile) as textFile:
             data.append(face)
 
 # Create a cube object from the input data
-cube = Cube(data)
+cube = Cube(data, instruction)
 
 # Move on to solve and print the cube ... if the input was valid
 if cube.check_inputs():

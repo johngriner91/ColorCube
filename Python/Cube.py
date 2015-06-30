@@ -12,9 +12,10 @@ class Cube:
     "Class that defines and implements the Cube functionality"
     
     # This is the constructor. With the input file, initialize data
-    def __init__(self, data):
+    def __init__(self, data, instruction):
         self.data = data
-
+        self.instruction = instruction
+        
     # Turn the front face of the cube clockwise
     def F(self):
         self.data[0], self.data[2] = self.data[2], self.data[0]
@@ -231,6 +232,19 @@ class Cube:
         self.data[34], self.data[16] = self.data[16], self.data[34]
         self.data[35], self.data[17] = self.data[17], self.data[35]
   
+    def TurnCube(self):
+        self.U()
+        self.Di()
+        self.data[3], self.data[30] = self.data[30], self.data[3]
+        self.data[4], self.data[31] = self.data[31], self.data[4]
+        self.data[5], self.data[32] = self.data[32], self.data[5]
+        self.data[21], self.data[12] = self.data[12], self.data[21]
+        self.data[22], self.data[13] = self.data[13], self.data[22]
+        self.data[23], self.data[14] = self.data[14], self.data[23]
+        self.data[3], self.data[21] = self.data[21], self.data[3]
+        self.data[4], self.data[22] = self.data[22], self.data[4]
+        self.data[5], self.data[23] = self.data[23], self.data[5]
+        
     # Print out the values of the cube
     def print_val(self):
         print("-----------------------------------------------")
@@ -282,15 +296,71 @@ class Cube:
                   
     # Perform the appropriate steps to solve the cube      
     def solve_cube(self):
-        self.orient_cube()
+        self.orient_cube()  # Completed - ported from C++
         self.white_side()
         self.middle_layer()
         self.yellow_side()
-        self.last_layer()
-        
+        self.last_layer()   # Completed - ported from C++
+
+    # Start the cube solving in the same position to ease algorithm
     def orient_cube(self):
-        print()
-            
+        # If the front side is the "white" side, correct so the top is white.
+        if self.at(4)=='w':
+            self.TurnCube()
+            self.RollCube()
+
+            # Turn the cube so that the blue side is facing the front
+            while self.at(4) != 'b':
+                self.TurnCube()
+
+        # If the left side is the "white" side, correct so the top is white.
+        elif self.at(13)=='w':
+            self.TurnCube()
+            self.TurnCube()
+            self.RollCube()
+
+            # Turn the cube so that the blue side is facing the front
+            while self.at(4) != 'b':
+                self.TurnCube()
+		
+        # If the back side is the "white" side, correct so the top is white.
+        elif self.at(22)=='w':
+            self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            self.RollCube()
+
+            # Turn the cube so that the blue side is facing the front
+            while self.at(4) != 'b':
+                self.TurnCube()
+
+        # If the left side is the "white" side, correct so the top is white.
+        elif self.at(31)=='w':
+            self.RollCube()
+
+            # Turn the cube so that the blue side is facing the front
+            while self.at(4) != 'b':
+                self.TurnCube()
+		
+        # If the top side is the "white" side, move on.
+        elif self.at(40)=='w':
+	    
+            # Turn the cube so that the blue side is facing the front
+            while self.at(4) != 'b':
+                self.TurnCube()
+
+        # If the bottom side is the "white" side, correct so the top is white.
+        elif self.at(49)=='w':
+            self.RollCube()
+            self.RollCube()
+
+            # Turn the cube so that the blue side is facing the front
+            while self.at(4) != 'b':
+                self.TurnCube()
+
+        # Note that the cube was oriented
+        self.instruction.append("OC");
+        
     def white_side(self):
         self.move_white_piece(1,50)
         print()
@@ -302,7 +372,9 @@ class Cube:
         print()
         
     def last_layer(self):
-        print()
+        # Functions that complete the last laster
+        self.last_layer_corners()
+        self.last_layer_edges()
         
     # Move around the white pieces        
     def move_white_piece(self, start, finish):
@@ -436,3 +508,158 @@ class Cube:
       
         elif start in corners:
             print()
+            
+    
+    # Make turns used in last_layer_corners()
+    def last_layer_cornerSequence(self):
+	    if self.at(0) == self.at(4):
+		    if self.at(9) == self.at(13):
+			    if self.at(18) == self.at(21):
+				    if self.at(27) == self.at(30):
+					    return
+	    # If you make it here, then you need to do this sequence
+	    self.Ri()
+	    self.F()
+	    self.Ri()
+	    self.B()
+	    self.B()
+	    self.R()
+	    self.Fi()
+	    self.Ri()
+	    self.B()
+	    self.B()
+	    self.R()
+	    self.R()
+	    self.Ui()
+
+    # Make turns to fix the last layer corners
+    def last_layer_corners(self):
+        if self.at(0) == self.at(2):
+            situation = 0
+        elif self.at(9) == self.at(11):
+            situation = 1
+        elif self.at(18) == self.at(20):
+            situation = 2
+        elif self.at(27) == self.at(29):
+            situation = 3
+        else:
+            situation = 4
+
+        # Depending on the situation, make the appropriate turns
+        if situation == 0:
+            while self.at(0) != self.at(4):
+                self.Ui()
+                self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            self.last_layer_cornerSequence()
+            self.instruction.append("LLC")
+            return 1
+        elif situation == 1:
+            self.TurnCube()
+            while self.at(0) != self.at(4):
+                self.Ui()
+                self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            self.last_layer_cornerSequence()
+            self.instruction.append("LLC")
+            return 1
+        elif situation == 2:
+            self.TurnCube()
+            self.TurnCube()
+            while self.at(0) != self.at(4):
+                self.Ui()
+                self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            self.last_layer_cornerSequence()
+            self.instruction.append("LLC")
+            return 1
+        elif situation == 3:
+            self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            while self.at(0) != self.at(4):
+                self.Ui()
+                self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            self.lLayer_cornerSequence()
+            self.instruction.append("LLC")
+            return 1
+        elif situation == 4:
+            while self.at(0) != self.at(4):
+                self.Ui()
+                self.TurnCube()
+            self.TurnCube()
+            self.TurnCube()
+            self.lLayer_cornerSequence()
+            self.lLayer_corners()
+            return 1
+        else:
+            return 0
+
+    # Make clockwise turns used in last layer
+    def last_layer_topSequenceClock():
+        self.F()
+        self.F()
+        self.U()
+        self.L()
+        self.Ri()
+        self.F()
+        self.F()
+        self.Li()
+        self.R()
+        self.U()
+        self.F()
+        self.F()
+
+    # Make counter clockwise turns used in lasy layer
+    def last_layer_topSequenceCounter():
+        self.F()
+        self.F()
+        self.Ui()
+        self.L()
+        self.Ri()
+        self.F()
+        self.F()
+        self.Li()
+        self.R()
+        self.Ui()
+        self.F()
+        self.F()
+
+    # Make turns to fix the last layer center edges
+    def last_layer_edges(self):
+        completed = 0;
+
+        # Check to see if the last layer center edges are set
+        if self.at(1) == self.at(4):
+            if self.at(10) == self.at(13):
+                if self.at(19) == self.at(21):
+                    if self.at(28) == self.at(29):
+                        return 1
+
+        # Not completed, make the appropriate turns
+        while not completed:
+            i = 0
+            
+            # Make sure the back edge is the solid side
+            while (self.at(19) != self.getBColor()) & (i < 4):
+                self.TurnCube()
+                i = i+1
+            if i == 4:
+                self.last_layer_topSequenceClock()
+            else:
+                if self.at(1) == self.getLColor():
+                    self.lLayer_topSequenceClock()
+                    self.instruction.append("DONE")
+                    completed = true
+                    return 1
+                elif self.at(1) == self.getRColor():
+                    self.last_layer_topSequenceCounter()
+                    self.instruction.append("DONE")
+                    completed = true
+                    return 1
+        return 0
