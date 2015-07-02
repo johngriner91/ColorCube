@@ -30,7 +30,7 @@ int main(){
 	// Right now, there isn't any file checking. Because it's in the
 	//	beginning stages, I know the input file will be in a correct
 	//	format.
-	inputFile.open("../input/test_0.txt");
+	inputFile.open("input_1.txt");
 
 	for(int j = 0; j < 54; j++){
 		inputFile >> cube_faces[j];

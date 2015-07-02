@@ -11,7 +11,7 @@ from Cube import Cube
 # Variables
 data = []
 instruction = []
-inputFile = "../input/input_0.txt"
+inputFile = "../input/input_9.txt"
 
 # Open up the input file and read in the cube values
 with open(inputFile) as textFile:
@@ -28,6 +28,7 @@ if cube.check_inputs():
     # Input was determined to be valid
     cube.solve_cube()
     cube.print_val()
+    cube.print_turns()
 else:
     # Input was determined to be invalid
     print("Input was determined to be invalid")

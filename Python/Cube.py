@@ -33,6 +33,7 @@ class Cube:
         self.data[44], self.data[45] = self.data[45], self.data[44]
         self.data[43], self.data[46] = self.data[46], self.data[43]
         self.data[42], self.data[47] = self.data[47], self.data[42]
+        self.instruction.append("F")
 
     # Turn the front face of the cube counterclockwise
     def Fi(self):
@@ -51,6 +52,7 @@ class Cube:
         self.data[9], self.data[35] = self.data[35], self.data[9]
         self.data[12], self.data[32] = self.data[32], self.data[12]
         self.data[15], self.data[29] = self.data[29], self.data[15]
+        self.instruction.append("Fi")
 
     # Turn the right face of the cube clockwise
     def R(self):
@@ -69,6 +71,7 @@ class Cube:
         self.data[47], self.data[38] = self.data[38], self.data[47]
         self.data[50], self.data[41] = self.data[41], self.data[50]
         self.data[53], self.data[44] = self.data[44], self.data[53]
+        self.instruction.append("R")
 
     # Turn the right face of the cube counterclockwise
     def Ri(self):
@@ -87,6 +90,7 @@ class Cube:
         self.data[2], self.data[24] = self.data[24], self.data[2]
         self.data[5], self.data[21] = self.data[21], self.data[5]
         self.data[8], self.data[18] = self.data[18], self.data[8]        
+        self.instruction.append("Ri")
         
     # Turn the back face of the cube clockwise
     def B(self):
@@ -105,6 +109,7 @@ class Cube:
         self.data[51], self.data[38] = self.data[38], self.data[51]
         self.data[52], self.data[37] = self.data[37], self.data[52]
         self.data[53], self.data[36] = self.data[36], self.data[53]
+        self.instruction.append("B")
 
     # Turn the back face of the cube counterclockwise
     def Bi(self):
@@ -123,6 +128,7 @@ class Cube:
         self.data[17], self.data[27] = self.data[27], self.data[17]
         self.data[14], self.data[30] = self.data[30], self.data[14]
         self.data[11], self.data[33] = self.data[33], self.data[11]
+        self.instruction.append("Bi")
 
     # Turn the left face of the cube clockwise
     def L(self):
@@ -141,6 +147,7 @@ class Cube:
         self.data[51], self.data[42] = self.data[42], self.data[51]
         self.data[48], self.data[39] = self.data[39], self.data[48]
         self.data[45], self.data[36] = self.data[36], self.data[45]
+        self.instruction.append("L")
 
     # Turn the left face of the cube counterclockwise
     def Li(self):
@@ -159,8 +166,9 @@ class Cube:
         self.data[6], self.data[20] = self.data[20], self.data[6]
         self.data[3], self.data[23] = self.data[23], self.data[3]
         self.data[0], self.data[26] = self.data[26], self.data[0]
+        self.instruction.append("Li")
 
-        # Turn the top face of the cube clockwise
+    # Turn the top face of the cube clockwise
     def U(self):
         self.data[36], self.data[38] = self.data[38], self.data[36]
         self.data[42], self.data[44] = self.data[44], self.data[42]
@@ -177,6 +185,7 @@ class Cube:
         self.data[20], self.data[2] = self.data[2], self.data[20]
         self.data[19], self.data[1] = self.data[1], self.data[19]
         self.data[18], self.data[0] = self.data[0], self.data[18]
+        self.instruction.append("U")
 
     # Turn the top face of the cube counterclockwise
     def Ui(self):
@@ -195,6 +204,7 @@ class Cube:
         self.data[11], self.data[29] = self.data[29], self.data[11]
         self.data[10], self.data[28] = self.data[28], self.data[10]
         self.data[9], self.data[27] = self.data[27], self.data[9]
+        self.instruction.append("Ui")
 
     # Turn the bottom face of the cube clockwise
     def D(self):
@@ -213,6 +223,7 @@ class Cube:
         self.data[24], self.data[6] = self.data[6], self.data[24]
         self.data[25], self.data[7] = self.data[7], self.data[25]
         self.data[26], self.data[8] = self.data[8], self.data[26]
+        self.instruction.append("D")
 
     # Turn the bottom face of the cube counterclockwise
     def Di(self):
@@ -231,7 +242,9 @@ class Cube:
         self.data[33], self.data[15] = self.data[15], self.data[33]
         self.data[34], self.data[16] = self.data[16], self.data[34]
         self.data[35], self.data[17] = self.data[17], self.data[35]
+        self.instruction.append("Di")
   
+    # Turn the whole cube clockwise
     def TurnCube(self):
         self.U()
         self.Di()
@@ -244,7 +257,10 @@ class Cube:
         self.data[3], self.data[21] = self.data[21], self.data[3]
         self.data[4], self.data[22] = self.data[22], self.data[4]
         self.data[5], self.data[23] = self.data[23], self.data[5]
- 
+        del self.instruction[-2:]
+        self.instruction.append("TurnCube")
+
+    # Roll the cube clockwise 
     def RollCube(self):
         self.F()
         self.Bi()
@@ -257,7 +273,9 @@ class Cube:
         self.data[39], self.data[50] = self.data[50], self.data[39]
         self.data[40], self.data[49] = self.data[49], self.data[40]
         self.data[41], self.data[48] = self.data[48], self.data[41]
-        
+        del self.instruction[-2:]
+        self.instruction.append("RollCube")
+               
     # Print out the values of the cube
     def print_val(self):
         print("-----------------------------------------------")
@@ -309,10 +327,11 @@ class Cube:
                   
     # Perform the appropriate steps to solve the cube      
     def solve_cube(self):
-        self.orient_cube()  # Completed - ported from C++
+        self.orient_cube()  # Completed - ported from C++ 
+        self.instruction.append("OrientCube")  
         self.white_side()   # Completed - ported from C++
-        self.middle_layer()
-        self.yellow_side()
+        self.middle_layer() # Completed - ported from C++
+        self.yellow_side()  # Completed - ported from C++
         self.last_layer()   # Completed - ported from C++
 
     # Start the cube solving in the same position to ease algorithm
@@ -357,7 +376,7 @@ class Cube:
 		
         # If the top side is the "white" side, move on.
         elif self.at(40)=='w':
-	    
+		
             # Turn the cube so that the blue side is facing the front
             while self.at(4) != 'b':
                 self.TurnCube()
@@ -370,26 +389,35 @@ class Cube:
             # Turn the cube so that the blue side is facing the front
             while self.at(4) != 'b':
                 self.TurnCube()
-
-        # Note that the cube was oriented
-        self.instruction.append("OC");
-        
+     
+    # Functions to solve the white side of the cube    
     def white_side(self):
         self.white_edges()
+        self.instruction.append("WhiteEdges")
         self.white_corners()
-        print()
-        
+        self.instruction.append("WhiteCorners")
+              
+    # Functions to solve the middle layer of the cube  
     def middle_layer(self):
         self.middleLayer()
+        self.instruction.append("MiddleLayer")
         
+    # Functions to solve the yellow side of the cube
     def yellow_side(self):
-        print()
+        self.yellow_cross()
+        print("YellowCross")
+        self.yellow_corners()
+        print("YellowCorners")
         
+    # Functions to solve the last layer of the cube
     def last_layer(self):
         # Functions that complete the last laster
         self.last_layer_corners()
+        self.instruction.append("LastLayerCorners")
         self.last_layer_edges()
+        self.instruction.append("LastLayerEdges")
         
+    # Make turns to fix the white edge pieces
     def white_edges(self):
         edges = [1,  3,  5,  7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 
                 32, 34, 37, 39, 41, 43, 46, 48, 50, 52]
@@ -410,18 +438,18 @@ class Cube:
             #   rewrite. We'll simply turn the cube until those positions
             # "become" case 0.
             if counter < 16:
-                numToTurn = counter / 4
+                numToTurn = int(counter // 4)
                 # reset the counter
                 counter = counter % 4
 
-                for i in range(0..numToTurn):
+                for i in range(0,numToTurn):
                     self.TurnCube()
 
             # This if/elif is the meat and potatos of the function. Depending on
-		    #   where the white cross pieces are, we need to make specific 
-		    #   turns to move them into their correct position. This case
-		    #   statements are the different possible positions of the white 
-		    #   pieces.
+			#   where the white cross pieces are, we need to make specific 
+			#   turns to move them into their correct position. This case
+			#   statements are the different possible positions of the white 
+			#   pieces.
             if counter == 0:
                 oppositeEdge = self.at(43)
                 if oppositeEdge == self.get_F_color():
@@ -713,9 +741,9 @@ class Cube:
 
 
             # Was the piece that was found supposed to be there? If not, start
-	    	# 	search over, because we may have accidentally moved some pieces
-	    	#   out of place. I doubt it, but it's always better to double
-	    	#   check.
+			#	search over, because we may have accidentally moved some pieces
+			#   out of place. I doubt it, but it's always better to double
+			#   check.
 
             if startOver:
                 counter = 0
@@ -729,10 +757,11 @@ class Cube:
             if numTurns > 20:
                 print("Over 10 turns for WhiteCross(). Need to debug")
                 return 0
-        
+     
+    # Make turns to fix the white corner pieces   
     def white_corners(self):
-        corners = [0,  2,  6,  8, 9, 11, 15, 17, 18, 20, 24, 26,
-	              27, 29, 33, 35, 36, 38, 42, 44, 45, 47, 51, 53]
+        corners = [0,  2,  6,  8,  9, 11, 15, 17, 18, 20, 24, 26,
+				  27, 29, 33, 35, 36, 38, 42, 44, 45, 47, 51, 53]
 
         counter = 0
         numTurns = 0
@@ -753,13 +782,13 @@ class Cube:
             #	positions "become" case 0.
 
             if counter < 16:
-                numTurns = counter / 4
+                numTurns = counter // 4
 
                 # reset the counter
                 counter = counter % 4
 
-            for i in range(0, numTurns):
-                self.TurnCube()
+                for i in range(0, numTurns):
+                    self.TurnCube()
 
             if counter == 0:
                 oppositeEdge1 = self.at(42)
@@ -1318,49 +1347,48 @@ class Cube:
                 print("Reached 20 moves. Must debug before moving on")
                 return 0
     
-            return 1
+        return 1
     
     # Sequence used in fixing middle layer
     def middle_fallLeft(self):
-        this->Ui()
-	    this->Li()
-	    this->U()
-	    this->L()
-	    this->U()
-	    this->F()
-	    this->Ui()
-	    this->Fi()
+        self.Ui()
+        self.Li()
+        self.U()
+        self.L()
+        self.U()
+        self.F()
+        self.Ui()
+        self.Fi()
 
     # Sequence used in fixing middle layer
     def middle_fallRight(self):
-        this->U()
-        this->R()
-        this->Ui()
-        this->Ri()
-        this->Ui()
-        this->Fi()
-        this->U()
-        this->F()
+        self.U()
+        self.R()
+        self.Ui()
+        self.Ri()
+        self.Ui()
+        self.Fi()
+        self.U()
+        self.F()
 
-    # Make turns to fix middle layer
-    def middleLayer():
+    # Make turns to fix middle layer pieces
+    def middleLayer(self):
         complete = False
 
         # Turn the white side down, as per Rubik's solution
-	    this->RollCube()
-	    this->RollCube()
+        self.RollCube()
+        self.RollCube()
 
-	    while not complete:
+        while not complete:
             # If the middle layer is completed,
-		    if this->at(3) == this->getFColor() and
-                    this->at(5) == this->getFColor() and
-                    this->at(12) == this->getRColor() and
-                    this->at(14) == this->getRColor() and
-                    this->at(21) == this->getBColor() and
-                    this->at(23) == this->getBColor() and
-                    this->at(30) == this->getLColor() and
-                    this->at(32) == this->getLColor():
-                instruction.append("Middle")
+            if ((self.at(3) == self.get_F_color() and
+                    self.at(5) == self.get_F_color() and
+                    self.at(12) == self.get_R_color() and
+                    self.at(14) == self.get_R_color() and
+                    self.at(21) == self.get_B_color() and
+                    self.at(23) == self.get_B_color() and
+                    self.at(30) == self.get_L_color() and
+                    self.at(32) == self.get_L_color())):
                 complete = True
             else:
                 situation = -1;
@@ -1370,185 +1398,243 @@ class Cube:
                 notAlignedThree = False
                 allYellowSides = False
 
-######################
-YOU ARE HERE. START PORTING HERE TOMORROW
-######################
+                # In order to fix the middle layer, we need to see which piece
+                #   needs to fall down to the sides.
+                if self.at(1) != 'y' and self.at(43) != 'y':
+                    situation = 0
+                elif self.at(10) != 'y' and self.at(41) != 'y':
+                    situation = 1
+                elif self.at(19) != 'y' and self.at(37) != 'y':
+                    situation = 2
+                elif self.at(28) != 'y' and self.at(39) != 'y':
+                    situation = 3
+                else:
+                    situation = 4
 
+      # Situations 0-3 mean that a side was found that didn't have a
+      #  yellow piece on the "fall down" side. Situation 4 is the situation
+      #  that all the pieces had a yellow face.
 
-      // In order to fix the middle layer, we need to see which piece needs to
-      //  fall down to the sides.
-			if((this->at(1) != 'y') & (this->at(43) != 'y'))
-				situation = 0;
-			else if((this->at(10) != 'y') & (this->at(41) != 'y'))
-				situation = 1;
-			else if((this->at(19) != 'y') & (this->at(37) != 'y'))
-				situation = 2;
-			else if((this->at(28) != 'y') & (this->at(39) != 'y'))
-				situation = 3;
-			else
-				situation = 4;
+                # Depending on the situation, make the appropriate turns
+                if situation == 0:
+                    notAlignedZero = True
+                    while notAlignedZero:
+                        if self.at(1) == self.get_F_color():
+                            notAlignedZero = False
+                        else:
+                            self.Ui()
+                            self.TurnCube()
+                    if self.at(43) == self.get_R_color():
+                        self.middle_fallRight()
+                    else:
+                        self.middle_fallLeft()
+                elif situation == 1:
+                    self.TurnCube()
+                    notAlignedOne = True
+                    while notAlignedOne:
+                        if self.at(1) == self.get_F_color():
+                            notAlignedOne = False
+                        else:
+                            self.Ui()
+                            self.TurnCube()
+                    if self.at(43) == self.get_R_color():
+                        self.middle_fallRight()
+                    else:
+                        self.middle_fallLeft()
+                elif situation == 2:
+                    self.TurnCube()
+                    self.TurnCube()
+                    notAlignedTwo = True
+                    while notAlignedTwo:
+                        if self.at(1) == self.get_F_color():
+                            notAlignedTwo = False
+                        else:
+                            self.Ui()
+                            self.TurnCube()
+                    if self.at(43) == self.get_R_color():
+                        self.middle_fallRight()
+                    else:
+                        self.middle_fallLeft()
+                elif situation == 3:
+                    self.TurnCube()
+                    self.TurnCube()
+                    self.TurnCube()
+                    notAlignedThree = True
+                    while notAlignedThree:
+                        if self.at(1) == self.get_F_color():
+                            notAlignedThree = False
+                        else:
+                            self.Ui()
+                            self.TurnCube()
+                    if self.at(43) == self.get_R_color():
+                        self.middle_fallRight()
+                    else:
+                        self.middle_fallLeft()
 
-      // Situations 0-3 mean that a side was found that didn't have a
-      //  yellow piece on the "fall down" side. Situation 4 is the situation
-      //  that all the pieces had a yellow face.
+                # SPECIAL CASE: Each side had yellow
+                elif situation == 4:
+                    allYellowSides = False
+                    if ((self.at(1) == 'y' and self.at(10) == 'y') and
+                            (self.at(19) == 'y' and self.at(28) == 'y')):
+                        allYellowSides = True
 
-      // Based on the situation,
-      std::string msg = "Situation " + to_string(situation) + " determined";
-      LOG(msg);
+                    # All sides are yellow
+                    if allYellowSides:
+                        wrongSide = True
+                        while wrongSide:
+                            if self.at(43) != self.at(4):
+                                self.Ui()
+                                self.TurnCube()
+                            else:
+                                wrongSide = False
 
-      // Depending on the situation, make the appropriate turns
-			switch(situation){
-				case 0:{
-					notAlignedZero = true;
-					while(notAlignedZero){
-						if(this->at(1) == this->getFColor())
-							notAlignedZero = false;
-						else{
-							this->Ui();
-							this->TurnCube();
-						}
-					}
-					if(this->at(43) == this->getRColor())
-						this->middle_fallRight();
-					else
-						this->middle_fallLeft();
-					break;
-        }
-				case 1:{
-					this->TurnCube();
-					notAlignedOne = true;
-					while(notAlignedOne){
-						if(this->at(1) == this->getFColor())
-							notAlignedOne = false;
-						else{
-							this->Ui();
-							this->TurnCube();
-						}
-					}
-					if(this->at(43) == this->getRColor())
-						this->middle_fallRight();
+                        if self.at(3) != self.at(4):
+                            self.TurnCube()
+                            self.TurnCube()
+                            self.TurnCube()
+                            self.U()
+                            self.middle_fallRight()
+                        else:
+                            self.TurnCube()
+                            self.Ui()
+                            self.middle_fallLeft()
+          
+                    # Not all sides are yellow
+                    else:
+                        while self.at(1) == 'y':
+                            self.U()
+                        while self.at(1) != self.at(4):
+                            self.Ui()
+                            self.TurnCube()
+                        if self.at(3) != self.at(4):
+                            self.middle_fallLeft()
+                        else:
+                            self.middle_fallRight()
+        # Exit function
+        return 1
+		
+    # Make turns to fix the yellow cross
+    def yellow_cross(self):
+        completed = False
 
-					else
-						this->middle_fallLeft();
-					break;
-        }
-				case 2:{
-					this->TurnCube();
-					this->TurnCube();
-					notAlignedTwo = true;
-					while(notAlignedTwo){
-						if(this->at(1) == this->getFColor())
-							notAlignedTwo = false;
-						else{
-							this->Ui();
-							this->TurnCube();
-						}
-					}
-					if(this->at(43) == this->getRColor())
-						this->middle_fallRight();
+        while not completed:
+            # At this point, the yellow cross is completed
+            if ( self.at(37) == 'y' and
+                    self.at(39) == 'y' and
+    		        self.at(41) == 'y' and
+                    self.at(43) == 'y' ):
+                self.instruction.append("YellowCross")
+                return 1
 
-					else
-						this->middle_fallLeft();
-					break;
-        }
-				case 3:{
-					this->TurnCube();
-					this->TurnCube();
-					this->TurnCube();
-					notAlignedThree = true;
-					while(notAlignedThree){
-						if(this->at(1) == this->getFColor())
-							notAlignedThree = false;
-						else{
-							this->Ui();
-							this->TurnCube();
-						}
-					}
-					if(this->at(43) == this->getRColor())
-						this->middle_fallRight();
-					else
-						this->middle_fallLeft();
-					break;
-        }
+            # Need to keep going
+            else:
+                onlyCenter = True
+                for i in range(0,3):
+                    # Specific sequence for the yellow "Line"
+                    if self.at(39) == 'y' and self.at(41) == 'y':
+                        onlyCenter = False
+                        self.F()
+                        self.R()
+                        self.U()
+                        self.Ri()
+                        self.Ui()
+                        self.Fi()
+                    # Specific sequence for the yellow "U"
+                    elif self.at(37) == 'y' and self.at(39) == 'y':
+                        onlyCenter = False
+                        self.F()
+                        self.U()
+                        self.R()
+                        self.Ui()
+                        self.Ri()
+                        self.Fi()
+                    else:
+                        self.U()
 
-        // SPECIAL CASE: Each side had yellow
-				case 4:{
-					allYellowSides = false;
-					if((this->at(1) == 'y') & (this->at(10) == 'y') &
-						(this->at(19) == 'y') & (this->at(28) == 'y'))
-							allYellowSides = true;
+                # Only the center piece is yellow, specific sequence
+                if onlyCenter:
+                    self.F()
+                    self.U()
+                    self.R()
+                    self.Ui()
+                    self.Ri()
+                    self.Fi()
+                    
+        # Otherwise, found a problem. Exit
+        return 0
 
-          // All sides are yellow
-					if(allYellowSides){
-						bool wrongSide = true;
-						while(wrongSide){
-							if(this->at(43) != this->at(4)){
-								this->Ui();
-								this->TurnCube();
-							}
-							else
-								wrongSide = false;
-						}
+    # Make turns used in yellow cross
+    def yellowCrossSequence(self):
+        self.R()
+        self.U()
+        self.Ri()
+        self.U()
+        self.R()
+        self.U()
+        self.U()
+        self.Ri()
 
-						if(this->at(3) != this->at(4)){
-							this->TurnCube();
-							this->TurnCube();
-							this->TurnCube();
-							this->U();
-							this->middle_fallRight();
-						}
-						else{
-							this->TurnCube();
-							this->Ui();
-							this->middle_fallLeft();
-						}
-					}
-          // Not all sides are yellow
-					else{
-						while(this->at(1) == 'y')
-							this->U();
-						while(this->at(1) != this->at(4)){
-							this->Ui();
-							this->TurnCube();
-						}
-						if(this->at(3) != this->at(4))
-							this->middle_fallLeft();
-						else
-							this->middle_fallRight();
-					}
-					break;
-        }
-				default:
-					this->printE("Hit default case in Middle Layer switch statement");
-			}
-		}
-	}
+    # Make turns to fix the yellow corners
+    def yellow_corners(self):
+        numCorners = 0
+        while numCorners != 4:
+            numCorners = 0
 
-  LOG("Returning sucessfully");
-  return PASS;
-}
-    
+            # Determine how many corners are set
+            if self.at(36) == 'y':
+                numCorners = numCorners+1
+            if self.at(38) == 'y':
+                numCorners = numCorners+1
+            if self.at(42) == 'y':
+                numCorners = numCorners+1
+            if self.at(44) == 'y':
+                numCorners = numCorners+1
+
+            # What to do? .....
+            if numCorners == 0:
+                while self.at(29) != 'y':
+                    self.U()
+                self.yellowCrossSequence()
+            elif numCorners == 1:
+                while self.at(42) != 'y':
+                    self.U()
+                self.yellowCrossSequence()
+            elif numCorners == 2:
+                print("Made it here 1")
+                while self.at(0) != 'y':
+                    print("Made it here 2")
+                    print("self.at(0) is ",self.at(0))
+                    self.U()
+                print("made it here 3")    
+                self.yellowCrossSequence()
+            # Otherwise, we are assuming things worked out fine
+            else:
+                self.instruction.append("YellowCorners")
+                return 1
+        return 0
+			
     # Make turns used in last_layer_corners()
     def last_layer_cornerSequence(self):
-	    if self.at(0) == self.at(4):
-		    if self.at(9) == self.at(13):
-			    if self.at(18) == self.at(21):
-				    if self.at(27) == self.at(30):
-					    return
-	    # If you make it here, then you need to do this sequence
-	    self.Ri()
-	    self.F()
-	    self.Ri()
-	    self.B()
-	    self.B()
-	    self.R()
-	    self.Fi()
-	    self.Ri()
-	    self.B()
-	    self.B()
-	    self.R()
-	    self.R()
-	    self.Ui()
+        if self.at(0) == self.at(4):
+            if self.at(9) == self.at(13):
+                if self.at(18) == self.at(21):
+                    if self.at(27) == self.at(30):
+                        return 1
+		
+        # If you make it here, then you need to do this sequence
+        self.Ri()
+        self.F()
+        self.Ri()
+        self.B()
+        self.B()
+        self.R()
+        self.Fi()
+        self.Ri()
+        self.B()
+        self.B()
+        self.R()
+        self.R()
+        self.Ui()
 
     # Make turns to fix the last layer corners
     def last_layer_corners(self):
@@ -1571,7 +1657,6 @@ YOU ARE HERE. START PORTING HERE TOMORROW
             self.TurnCube()
             self.TurnCube()
             self.last_layer_cornerSequence()
-            self.instruction.append("LLC")
             return 1
         elif situation == 1:
             self.TurnCube()
@@ -1581,7 +1666,6 @@ YOU ARE HERE. START PORTING HERE TOMORROW
             self.TurnCube()
             self.TurnCube()
             self.last_layer_cornerSequence()
-            self.instruction.append("LLC")
             return 1
         elif situation == 2:
             self.TurnCube()
@@ -1592,7 +1676,6 @@ YOU ARE HERE. START PORTING HERE TOMORROW
             self.TurnCube()
             self.TurnCube()
             self.last_layer_cornerSequence()
-            self.instruction.append("LLC")
             return 1
         elif situation == 3:
             self.TurnCube()
@@ -1603,8 +1686,7 @@ YOU ARE HERE. START PORTING HERE TOMORROW
                 self.TurnCube()
             self.TurnCube()
             self.TurnCube()
-            self.lLayer_cornerSequence()
-            self.instruction.append("LLC")
+            self.last_layer_cornerSequence()
             return 1
         elif situation == 4:
             while self.at(0) != self.at(4):
@@ -1612,14 +1694,14 @@ YOU ARE HERE. START PORTING HERE TOMORROW
                 self.TurnCube()
             self.TurnCube()
             self.TurnCube()
-            self.lLayer_cornerSequence()
-            self.lLayer_corners()
+            self.last_layer_cornerSequence()
+            self.last_layer_corners()
             return 1
         else:
             return 0
 
     # Make clockwise turns used in last layer
-    def last_layer_topSequenceClock():
+    def last_layer_topSequenceClock(self):
         self.F()
         self.F()
         self.U()
@@ -1634,7 +1716,7 @@ YOU ARE HERE. START PORTING HERE TOMORROW
         self.F()
 
     # Make counter clockwise turns used in lasy layer
-    def last_layer_topSequenceCounter():
+    def last_layer_topSequenceCounter(self):
         self.F()
         self.F()
         self.Ui()
@@ -1671,13 +1753,18 @@ YOU ARE HERE. START PORTING HERE TOMORROW
                 self.last_layer_topSequenceClock()
             else:
                 if self.at(1) == self.get_L_color():
-                    self.lLayer_topSequenceClock()
-                    self.instruction.append("DONE")
+                    self.last_layer_topSequenceClock()
                     completed = True
                     return 1
                 elif self.at(1) == self.get_R_color():
                     self.last_layer_topSequenceCounter()
-                    self.instruction.append("DONE")
                     completed = True
                     return 1
         return 0
+
+    # Print the turns
+    def print_turns(self):
+        length = len(self.instruction)
+        print("length is", length)
+        for x in range(0,len(self.instruction)):
+            print(self.instruction[x])

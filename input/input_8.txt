@@ -1,0 +1,23 @@
+w y o
+r r w
+r w y
+
+y r o
+b g g
+g o w
+
+w o b
+w o y
+r o r
+
+y b g
+r b g
+b g b
+
+o b b
+r y w
+o b g
+
+w o r
+y w y
+y g g
