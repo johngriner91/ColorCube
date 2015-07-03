@@ -26,9 +26,11 @@ cube = Cube(data, instruction)
 # Move on to solve and print the cube ... if the input was valid
 if cube.check_inputs():
     # Input was determined to be valid
-    cube.solve_cube()
-    cube.print_val()
-    cube.print_turns()
+    if cube.solve_cube():
+        cube.print_val()
+        cube.print_turns()
+    else:
+        print("Error: correct input, but unable to solve.")
 else:
     # Input was determined to be invalid
     print("Input was determined to be invalid")

@@ -1,6 +1,6 @@
 ##############################################################################
 #   Author: John Griner
-#   
+#
 #   Methods:
 #     __init__  : initialize class data
 #     Clockwise Turns (F-D) : turn the cube face clockwise
@@ -10,12 +10,12 @@
 
 class Cube:
     "Class that defines and implements the Cube functionality"
-    
+
     # This is the constructor. With the input file, initialize data
     def __init__(self, data, instruction):
         self.data = data
         self.instruction = instruction
-        
+
     # Turn the front face of the cube clockwise
     def F(self):
         self.data[0], self.data[2] = self.data[2], self.data[0]
@@ -89,9 +89,9 @@ class Cube:
         self.data[53], self.data[8] = self.data[8], self.data[53]
         self.data[2], self.data[24] = self.data[24], self.data[2]
         self.data[5], self.data[21] = self.data[21], self.data[5]
-        self.data[8], self.data[18] = self.data[18], self.data[8]        
+        self.data[8], self.data[18] = self.data[18], self.data[8]
         self.instruction.append("Ri")
-        
+
     # Turn the back face of the cube clockwise
     def B(self):
         self.data[18], self.data[20] = self.data[20], self.data[18]
@@ -153,7 +153,7 @@ class Cube:
     def Li(self):
         self.data[27], self.data[29] = self.data[29], self.data[27]
         self.data[33], self.data[35] = self.data[35], self.data[33]
-        self.data[29], self.data[33] = self.data[33], self.data[29]        
+        self.data[29], self.data[33] = self.data[33], self.data[29]
         self.data[28], self.data[32] = self.data[32], self.data[28]
         self.data[30], self.data[34] = self.data[34], self.data[30]
         self.data[32], self.data[30] = self.data[30], self.data[32]
@@ -243,7 +243,7 @@ class Cube:
         self.data[34], self.data[16] = self.data[16], self.data[34]
         self.data[35], self.data[17] = self.data[17], self.data[35]
         self.instruction.append("Di")
-  
+
     # Turn the whole cube clockwise
     def TurnCube(self):
         self.U()
@@ -260,7 +260,7 @@ class Cube:
         del self.instruction[-2:]
         self.instruction.append("TurnCube")
 
-    # Roll the cube clockwise 
+    # Roll the cube clockwise
     def RollCube(self):
         self.F()
         self.Bi()
@@ -275,7 +275,7 @@ class Cube:
         self.data[41], self.data[48] = self.data[48], self.data[41]
         del self.instruction[-2:]
         self.instruction.append("RollCube")
-               
+
     # Print out the values of the cube
     def print_val(self):
         print("-----------------------------------------------")
@@ -285,54 +285,72 @@ class Cube:
             print()
             if not (x+1)%3:
                 print()
-        print("-----------------------------------------------")        
+        print("-----------------------------------------------")
         print()
-        
+
     # Get the color at a specific index
     def at(self, index):
         return self.data[index]
-        
+
     # Return the color of the front side
     def get_F_color(self):
         return self.data[4]
-        
+
     # Return the color of the right side
     def get_R_color(self):
         return self.data[13]
-        
+
     # Return the color of the back side
     def get_B_color(self):
         return self.data[22]
-        
+
     # Return the color of the left side
     def get_L_color(self):
         return self.data[31]
-        
+
     # Return the color of the top side
     def get_U_color(self):
         return self.data[40]
-        
+
     # Return the color of the bottom side
     def get_D_color(self):
         return self.data[49]
-        
-    # Make sure there are an even number of colors 
+
+    # Make sure there are an even number of colors
     def check_inputs(self):
-        if (self.data.count("b") and self.data.count("o") and 
-            self.data.count("g") and self.data.count("r") and
-            self.data.count("w") and self.data.count("y") == 9):
+        if ((self.data.count("b") == 9 and self.data.count("o") == 9) and
+            (self.data.count("g") == 9 and self.data.count("r") == 9) and
+            (self.data.count("w") == 9 and self.data.count("y") == 9)):
             return True
         else:
             return False
-                  
-    # Perform the appropriate steps to solve the cube      
+
+    # Perform the appropriate steps to solve the cube
     def solve_cube(self):
-        self.orient_cube()  # Completed - ported from C++ 
-        self.instruction.append("OrientCube")  
-        self.white_side()   # Completed - ported from C++
-        self.middle_layer() # Completed - ported from C++
-        self.yellow_side()  # Completed - ported from C++
-        self.last_layer()   # Completed - ported from C++
+        goodReturn = 1
+        testReturn = 0
+
+        testReturn = self.orient_cube()
+        if testReturn != goodReturn:
+            return testReturn
+
+        testReturn = self.white_side()
+        if testReturn != goodReturn:
+            return testReturn
+
+        testReturn = self.middle_layer()
+        if testReturn != goodReturn:
+            return testReturn
+
+        testReturn = self.yellow_side()
+        if testReturn != goodReturn:
+            return testReturn
+
+        testReturn = self.last_layer()
+        if testReturn != goodReturn:
+            return testReturn
+
+        return goodReturn
 
     # Start the cube solving in the same position to ease algorithm
     def orient_cube(self):
@@ -354,7 +372,7 @@ class Cube:
             # Turn the cube so that the blue side is facing the front
             while self.at(4) != 'b':
                 self.TurnCube()
-		
+
         # If the back side is the "white" side, correct so the top is white.
         elif self.at(22)=='w':
             self.TurnCube()
@@ -373,10 +391,10 @@ class Cube:
             # Turn the cube so that the blue side is facing the front
             while self.at(4) != 'b':
                 self.TurnCube()
-		
+
         # If the top side is the "white" side, move on.
         elif self.at(40)=='w':
-		
+
             # Turn the cube so that the blue side is facing the front
             while self.at(4) != 'b':
                 self.TurnCube()
@@ -389,37 +407,75 @@ class Cube:
             # Turn the cube so that the blue side is facing the front
             while self.at(4) != 'b':
                 self.TurnCube()
-     
-    # Functions to solve the white side of the cube    
+
+        self.instruction.append("OrientCube")
+        # Return sucessful
+        return 1
+
+    # Functions to solve the white side of the cube
     def white_side(self):
-        self.white_edges()
-        self.instruction.append("WhiteEdges")
-        self.white_corners()
-        self.instruction.append("WhiteCorners")
-              
-    # Functions to solve the middle layer of the cube  
+
+        SUCCESS = 0
+
+        if self.white_edges() == 1:
+            self.instruction.append("WhiteEdges")
+            SUCCESS = SUCCESS + 1
+        if self.white_corners() == 1:
+            self.instruction.append("WhiteCorners")
+            SUCCESS = SUCCESS + 1
+
+        if SUCCESS == 2:
+            return 1
+        else:
+            return 2
+
+    # Functions to solve the middle layer of the cube
     def middle_layer(self):
-        self.middleLayer()
-        self.instruction.append("MiddleLayer")
-        
+        if self.middleLayer():
+            self.instruction.append("MiddleLayer")
+            return 1
+        else:
+            return 3
+
     # Functions to solve the yellow side of the cube
     def yellow_side(self):
-        self.yellow_cross()
-        print("YellowCross")
-        self.yellow_corners()
-        print("YellowCorners")
-        
+
+        SUCCESS = 0
+
+        if self.yellow_cross():
+            self.instruction.append("YellowCross")
+            SUCCESS = SUCCESS + 1
+        if self.yellow_corners() and SUCCESS == 1:
+            self.instruction.append("YellowCorners")
+            SUCCESS = SUCCESS + 1
+
+        if SUCCESS == 2:
+            return 1
+        else:
+            return 4
+
     # Functions to solve the last layer of the cube
     def last_layer(self):
+
+        SUCCESS = 0
+
         # Functions that complete the last laster
-        self.last_layer_corners()
-        self.instruction.append("LastLayerCorners")
-        self.last_layer_edges()
-        self.instruction.append("LastLayerEdges")
-        
+        if self.last_layer_corners():
+            self.instruction.append("LastLayerCorners")
+            SUCCESS = SUCCESS + 1
+
+        if self.last_layer_edges():
+            self.instruction.append("LastLayerEdges")
+            SUCCESS = SUCCESS + 1
+
+        if SUCCESS == 2:
+            return 1
+        else:
+            return 5
+
     # Make turns to fix the white edge pieces
     def white_edges(self):
-        edges = [1,  3,  5,  7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30, 
+        edges = [1,  3,  5,  7, 10, 12, 14, 16, 19, 21, 23, 25, 28, 30,
                 32, 34, 37, 39, 41, 43, 46, 48, 50, 52]
         counter = 0
         numTurns = 0
@@ -432,7 +488,7 @@ class Cube:
                 counter = counter+1
                 if counter >= 24:
                     return 1
-      
+
             # "Repeat" the position-based algorithm. This way, case 0 can be
             #   used to handle positions 1, 10, 19, and 28 without any code
             #   rewrite. We'll simply turn the cube until those positions
@@ -446,9 +502,9 @@ class Cube:
                     self.TurnCube()
 
             # This if/elif is the meat and potatos of the function. Depending on
-			#   where the white cross pieces are, we need to make specific 
+			#   where the white cross pieces are, we need to make specific
 			#   turns to move them into their correct position. This case
-			#   statements are the different possible positions of the white 
+			#   statements are the different possible positions of the white
 			#   pieces.
             if counter == 0:
                 oppositeEdge = self.at(43)
@@ -757,8 +813,8 @@ class Cube:
             if numTurns > 20:
                 print("Over 10 turns for WhiteCross(). Need to debug")
                 return 0
-     
-    # Make turns to fix the white corner pieces   
+
+    # Make turns to fix the white corner pieces
     def white_corners(self):
         corners = [0,  2,  6,  8,  9, 11, 15, 17, 18, 20, 24, 26,
 				  27, 29, 33, 35, 36, 38, 42, 44, 45, 47, 51, 53]
@@ -815,7 +871,7 @@ class Cube:
                     self.Ri()
                     self.F()
                 elif ((oppositeEdge1 == self.get_B_color() or
-                        oppositeEdge2 == self.get_B_color()) and 
+                        oppositeEdge2 == self.get_B_color()) and
                         (oppositeEdge1 == self.get_L_color() or
                         oppositeEdge2 == self.get_L_color())):
                     self.Fi()
@@ -907,7 +963,7 @@ class Cube:
                     self.Di()
                     self.Bi()
                 elif ((oppositeEdge1 == self.get_L_color() or
-                        oppositeEdge2 == self.get_L_color()) and 
+                        oppositeEdge2 == self.get_L_color()) and
                         (oppositeEdge1 == self.get_F_color() or
                         oppositeEdge2 == self.get_F_color())):
                     self.D()
@@ -918,7 +974,7 @@ class Cube:
                 oppositeEdge1 = self.at(47)
                 oppositeEdge2 = self.at(15)
 
-                if ((oppositeEdge1 == self.get_F_color() or 
+                if ((oppositeEdge1 == self.get_F_color() or
                         oppositeEdge2 == self.get_F_color()) and
                         (oppositeEdge1 == self.get_R_color() or
                         oppositeEdge2 == self.get_R_color())):
@@ -1061,7 +1117,7 @@ class Cube:
                     self.Li()
                     self.Ri()
                 elif ((oppositeEdge1 == self.get_B_color() or
-                        oppositeEdge2 == self.get_B_color()) and 
+                        oppositeEdge2 == self.get_B_color()) and
                         (oppositeEdge1 == self.get_L_color() or
                         oppositeEdge2 == self.get_L_color())):
                     self.L()
@@ -1346,9 +1402,9 @@ class Cube:
             if numTurns > 20:
                 print("Reached 20 moves. Must debug before moving on")
                 return 0
-    
+
         return 1
-    
+
     # Sequence used in fixing middle layer
     def middle_fallLeft(self):
         self.Ui()
@@ -1498,7 +1554,7 @@ class Cube:
                             self.TurnCube()
                             self.Ui()
                             self.middle_fallLeft()
-          
+
                     # Not all sides are yellow
                     else:
                         while self.at(1) == 'y':
@@ -1512,10 +1568,11 @@ class Cube:
                             self.middle_fallRight()
         # Exit function
         return 1
-		
+
     # Make turns to fix the yellow cross
     def yellow_cross(self):
         completed = False
+        numTurns = 0
 
         while not completed:
             # At this point, the yellow cross is completed
@@ -1559,9 +1616,10 @@ class Cube:
                     self.Ui()
                     self.Ri()
                     self.Fi()
-                    
-        # Otherwise, found a problem. Exit
-        return 0
+
+                numTurns = numTurns + 1
+                if numTurns >= 5:
+                    return 0
 
     # Make turns used in yellow cross
     def yellowCrossSequence(self):
@@ -1577,6 +1635,8 @@ class Cube:
     # Make turns to fix the yellow corners
     def yellow_corners(self):
         numCorners = 0
+        numTurns = 0
+
         while numCorners != 4:
             numCorners = 0
 
@@ -1600,19 +1660,25 @@ class Cube:
                     self.U()
                 self.yellowCrossSequence()
             elif numCorners == 2:
-                print("Made it here 1")
                 while self.at(0) != 'y':
-                    print("Made it here 2")
-                    print("self.at(0) is ",self.at(0))
                     self.U()
-                print("made it here 3")    
                 self.yellowCrossSequence()
+
+            # If numCorners is 3, then we have a parity problem. This is an
+            #   unsolvable cube. Something either went wrong, or the user put
+            #   in some bad data.
+            elif numCorners == 3:
+                return 0
+
             # Otherwise, we are assuming things worked out fine
             else:
                 self.instruction.append("YellowCorners")
                 return 1
-        return 0
-			
+
+            numTurns = numTurns + 1
+            if numTurns >= 5:
+                return 0
+
     # Make turns used in last_layer_corners()
     def last_layer_cornerSequence(self):
         if self.at(0) == self.at(4):
@@ -1620,7 +1686,7 @@ class Cube:
                 if self.at(18) == self.at(21):
                     if self.at(27) == self.at(30):
                         return 1
-		
+
         # If you make it here, then you need to do this sequence
         self.Ri()
         self.F()
@@ -1732,7 +1798,8 @@ class Cube:
 
     # Make turns to fix the last layer center edges
     def last_layer_edges(self):
-        completed = 0;
+        completed = 0
+        numSolidSides = 0
 
         # Check to see if the last layer center edges are set
         if self.at(1) == self.at(4):
@@ -1744,11 +1811,29 @@ class Cube:
         # Not completed, make the appropriate turns
         while not completed:
             i = 0
-            
+
             # Make sure the back edge is the solid side
             while (self.at(19) != self.get_B_color()) & (i < 4):
                 self.TurnCube()
                 i = i+1
+
+            numSolidSides = 0
+
+            # At this point, the back side, is solid. If other sides are
+            #   solid, then we have a parity issue. The cube in unsolvable.
+            #   Either something happened or the user put in bad data.
+            if self.at(1) == self.get_F_color():
+                numSolidSides = numSolidSides + 1
+            if self.at(10) == self.get_R_color():
+                numSolidSides = numSolidSides + 1
+            if self.at(19) == self.get_B_color():
+                numSolidSides = numSolidSides + 1
+            if self.at(28) == self.get_L_color():
+                numSolidSides = numSolidSides + 1
+
+            if numSolidSides >= 2:
+                return 0
+
             if i == 4:
                 self.last_layer_topSequenceClock()
             else:
