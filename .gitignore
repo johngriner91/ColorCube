@@ -1,5 +1,5 @@
 # Python stuff
-Python/__pycache__/*
+./Python/__pycache__/*
 
 # C++ stuff
-Cpp/main
+./Cpp/main
